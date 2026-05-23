@@ -330,17 +330,19 @@ async function generateTopics(){
 
 嚴格規則：
 1.主題必須100%符合IP人設，不能出現與人設矛盾的情境
-2.hook前3秒必須有強衝突、反差或誇張張力
+2.hook前3秒必須有強衝突、反差或誇張張力，只描述開場情境不超過20字不寫台詞
 3.藏是毒舌損友，不是乖助理
 4.不能編造具體數字
 5.10個主題要涵蓋至少2種不同模式
-6.如有指定方向，必須優先納入`;
+6.如有指定方向，必須優先納入
+7.所有主題必須是可以提前安排和執行的，不能設計需要臨時發生或無法控制的情境（例如：手機剛好收到通知、剛好遇到某人、臨時發生的事）
+8.hook只給開場方向，台詞和細節留給腳本生成，不要把整個故事都寫在hook裡`;
 
   const basePrompt=`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}${bgCtx}${forbCtx}${specCtx}
 產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`;
 
   try{
-    const d1=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:sys,messages:[{role:'user',content:basePrompt+'\n請產出第1-5個主題'}]});
+    const d1=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:sys,messages:[{role:'user',content:basePrompt+(extracted.specified_topics?`\n\n【重要】以下是指定必須出現的主題方向，請優先把這些方向設計成主題，不夠再自由發揮：\n${extracted.specified_topics}`:'')+'\n請產出第1-5個主題，如有指定方向必須優先納入'}]});
     if(d1.error)throw new Error(d1.error.message);
     const t1=(d1.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     const batch1=JSON.parse(t1);
