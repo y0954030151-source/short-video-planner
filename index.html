@@ -97,9 +97,9 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
   <div class="content">
     <div id="p-step1">
       <p class="page-title">貼入對焦會議逐字稿</p>
-      <p class="page-sub">選擇左側 IP，貼入逐字稿後開始分析</p>
+      <p class="page-sub">選擇左側 IP，貼入逐字稿或自己的企劃方向後開始分析</p>
       <div class="card">
-        <div class="field"><label>會議逐字稿</label><textarea id="transcriptInput" style="min-height:200px;" placeholder="將對焦會議的逐字稿貼在這裡..."></textarea></div>
+        <div class="field"><label>逐字稿 / 企劃方向</label><textarea id="transcriptInput" style="min-height:200px;" placeholder="可以貼入：&#10;① 對焦會議逐字稿&#10;② 自己想的企劃方向（條列也可以）&#10;例：1. 想做妮妮騎機車的反差 2. 想帶出信用卡財商知識 3. 配合近期熱門話題"></textarea></div>
         <div class="btn-row"><button class="btn btn-primary" onclick="analyzeTranscript()">分析逐字稿 →</button></div>
       </div>
     </div>
@@ -173,7 +173,9 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       </div>
       <div class="card">
         <div class="card-title">學習素材</div>
-        <div class="field"><label>過去企劃（貼入純文字，AI 學習風格用）</label><textarea id="ip-past" style="min-height:140px;" placeholder="將過去的企劃腳本貼在這裡..."></textarea></div>
+        <div class="field"><label>擅長的企劃模式（可多選，逗號分隔）</label><input type="text" id="ip-modes" placeholder="例：藏鏡人對話,旁白,遊戲挑戰,回到過去場景"></div>
+<div class="field"><label>人設禁忌（不能出現的情境）</label><input type="text" id="ip-forbidden" placeholder="例：不能有帳單焦慮、不能顯示窮困、不涉及詐騙"></div>
+<div class="field"><label>過去企劃（貼入純文字，AI 學習風格用）</label><textarea id="ip-past" style="min-height:140px;" placeholder="將過去的企劃腳本貼在這裡..."></textarea></div>
         <div class="field" style="margin:0;"><label>視覺風格備註</label><textarea id="ip-visual" style="min-height:60px;" placeholder="例：字幕大字白底、戶外場景為主..."></textarea></div>
       </div>
     </div>
@@ -270,14 +272,41 @@ async function generateTopics(){
   const bCtx=blogger?`\n參考博主：${blogger.name}，風格：${blogger.style}${blogger.dna?`\n風格DNA：${blogger.dna.substring(0,300)}`:''}`:''
   const pCtx=ip.past?`\n過去企劃：\n${ip.past.substring(0,500)}`:''
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]共10個，每欄位15字內。嚴格規則：1.主題必須完全符合IP人設，不能出現與人設矛盾的情境 2.hook必須是強衝突開場，前3秒製造反差或誇張張力讓人停下來 3.仔細閱讀過去企劃學習風格節奏，生成結果要與之一致`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃專家，專門為藏鏡人模式IP產出腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","mode":"企劃模式","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]共10個，每欄位15字內。
+
+四大企劃模式：
+1.藏鏡人對話模式：強鉤子開場→藏質疑吐槽→IP反駁帶出人設→藏一句話收尾。鉤子類型：金額衝擊、視覺反差、誤會情境、POV搭訕。
+2.旁白模式：「大家以為...但實際上...」反差句開場→旁白揭露真實→藏提問推進→金句昇華收尾。或第三人視角旁白介紹IP→切入真實反差→昇華人設。
+3.遊戲挑戰模式：規則說明→過程懸念笑點→意外反轉→輕鬆收尾邀觀眾參與。類型：打賭、默契測驗、體驗挑戰、坦白局。
+4.回到過去場景模式：重返舊地點→過去vs現在反差→真實低潮經歷→昇華價值觀。
+
+嚴格規則：1.主題必須100%符合IP人設，富婆人設不會出現帳單焦慮等矛盾情境 2.hook前3秒必須有強衝突反差或張力 3.仔細閱讀過去企劃學習風格節奏 4.10個主題要涵蓋至少2種不同模式，讓內容多樣化`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}${ip.modes?'\n擅長模式：'+ip.modes:''}${ip.forbidden?'\n人設禁忌（絕對不能出現）：'+ip.forbidden:''}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
     const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     topics=JSON.parse(txt);renderTopics();
   }catch(e){document.getElementById('topicsList').innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
 }
 
 function renderTopics(){
-  document.getElementById('topicsList').innerHTML=topics.map((t,i)=>`<div class="topic-item" id="topic-item-${i}"><input type="checkbox" id="tc-${i}" value="${i}" onchange="this.closest('.topic-item').classList.toggle('selected',this.checked)"><div class="topic-num">${String(i+1).padStart(2,'0')}</div><div class="topic-body"><label for="tc-${i}" class="topic-title">${t.title}</label><div class="topic-meta"><span>🎣 ${t.hook}</span><span>💥 ${t.conflict}</span><span>🎬 ${t.ending}</span></div><div class="topic-actions"><button class="btn btn-outline btn-sm" onclick="regenSingle(${i})">重新生成</button></div></div></div>`).join('');
+  const MODE_OPTIONS=['藏鏡人對話','旁白','遊戲挑戰','回到過去場景'];
+  document.getElementById('topicsList').innerHTML=topics.map((t,i)=>{
+    const mode=t.mode||'藏鏡人對話';
+    const modeOpts=MODE_OPTIONS.map(m=>`<option value="${m}">${m}模式</option>`).join('');
+    return `<div class="topic-item" id="topic-item-${i}">
+      <input type="checkbox" id="tc-${i}" value="${i}" onchange="this.closest('.topic-item').classList.toggle('selected',this.checked)">
+      <div class="topic-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="topic-body">
+        <label for="tc-${i}" class="topic-title">${t.title}</label>
+        <div style="margin-bottom:6px;"><span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(200,245,90,0.1);color:var(--accent);border:1px solid rgba(200,245,90,0.3);">${mode}</span></div>
+        <div class="topic-meta"><span>🎣 ${t.hook}</span><span>💥 ${t.conflict}</span><span>🎬 ${t.ending}</span></div>
+        <div class="topic-actions" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="regenSingle(${i})">重新生成</button>
+          <select onchange="if(this.value)regenWithMode(${i},this.value);this.value=''" style="font-size:12px;padding:5px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);">
+            <option value="">換模式重生</option>${modeOpts}
+          </select>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 async function regenSingle(idx){
@@ -286,6 +315,20 @@ async function regenSingle(idx){
   try{
     const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出1個新主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}，賣點：${extracted.usp}\n請產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
     const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    topics[idx]=JSON.parse(txt);renderTopics();
+  }catch(e){renderTopics()}
+}
+
+async function regenWithMode(idx, mode){
+  const ip=ipDB[selectedIP];
+  const item=document.getElementById('topic-item-'+idx);
+  item.querySelector('.topic-body').innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">切換模式重新生成中</div>';
+  try{
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:600,
+      system:`你是抖音短影音企劃，產出指定模式的腳本主題。只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"${mode}","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}每欄位15字內`,
+      messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}，賣點：${extracted.usp}${ip.forbidden?'\n禁忌：'+ip.forbidden:''}
+請用【${mode}模式】產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
+    const txt=d.content.map(c=>c.text||'').join('').replace(/\`\`\`json|\`\`\`/g,'').trim();
     topics[idx]=JSON.parse(txt);renderTopics();
   }catch(e){renderTopics()}
 }
@@ -311,8 +354,8 @@ function save(){localStorage.setItem('svp_ip',JSON.stringify(ipDB));localStorage
 
 function renderIPSidebar(){document.getElementById('ip-sidebar-list').innerHTML=ipDB.map((ip,i)=>`<div class="sidebar-item ${editingIPIdx===i?'active':''}" onclick="editIP(${i})"><div class="sidebar-item-name">${ip.name}</div><div class="sidebar-item-meta">${ip.platform}</div></div>`).join('')}
 function newIP(){editingIPIdx=-1;clearIPForm();document.getElementById('ipFormTitle').textContent='新增 IP';document.getElementById('ipDeleteBtn').style.display='none';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
-function editIP(i){editingIPIdx=i;const ip=ipDB[i];document.getElementById('ipFormTitle').textContent='編輯 IP：'+ip.name;document.getElementById('ipDeleteBtn').style.display='inline-block';document.getElementById('ip-name').value=ip.name||'';document.getElementById('ip-platform').value=ip.platform||'抖音';document.getElementById('ip-audience').value=ip.audience||'';document.getElementById('ip-category').value=ip.category||'';document.getElementById('ip-zangking').value=ip.zangking||'';document.getElementById('ip-tags').value=ip.tags||'';document.getElementById('ip-past').value=ip.past||'';document.getElementById('ip-visual').value=ip.visual||'';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
-function saveIP(){const ip={name:document.getElementById('ip-name').value.trim(),platform:document.getElementById('ip-platform').value,audience:document.getElementById('ip-audience').value.trim(),category:document.getElementById('ip-category').value.trim(),zangking:document.getElementById('ip-zangking').value.trim(),tags:document.getElementById('ip-tags').value.trim(),past:document.getElementById('ip-past').value.trim(),visual:document.getElementById('ip-visual').value.trim()};if(!ip.name){alert('請填入 IP 名稱');return}if(editingIPIdx>=0)ipDB[editingIPIdx]=ip;else ipDB.push(ip);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
+function editIP(i){editingIPIdx=i;const ip=ipDB[i];document.getElementById('ipFormTitle').textContent='編輯 IP：'+ip.name;document.getElementById('ipDeleteBtn').style.display='inline-block';document.getElementById('ip-name').value=ip.name||'';document.getElementById('ip-platform').value=ip.platform||'抖音';document.getElementById('ip-audience').value=ip.audience||'';document.getElementById('ip-category').value=ip.category||'';document.getElementById('ip-zangking').value=ip.zangking||'';document.getElementById('ip-tags').value=ip.tags||'';document.getElementById('ip-modes').value=ip.modes||'';document.getElementById('ip-forbidden').value=ip.forbidden||'';document.getElementById('ip-past').value=ip.past||'';document.getElementById('ip-visual').value=ip.visual||'';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
+function saveIP(){const ip={name:document.getElementById('ip-name').value.trim(),platform:document.getElementById('ip-platform').value,audience:document.getElementById('ip-audience').value.trim(),category:document.getElementById('ip-category').value.trim(),zangking:document.getElementById('ip-zangking').value.trim(),tags:document.getElementById('ip-tags').value.trim(),modes:document.getElementById('ip-modes').value.trim(),forbidden:document.getElementById('ip-forbidden').value.trim(),past:document.getElementById('ip-past').value.trim(),visual:document.getElementById('ip-visual').value.trim()};if(!ip.name){alert('請填入 IP 名稱');return}if(editingIPIdx>=0)ipDB[editingIPIdx]=ip;else ipDB.push(ip);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
 function deleteIP(){if(!confirm(`確定刪除「${ipDB[editingIPIdx].name}」？`))return;ipDB.splice(editingIPIdx,1);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
 function cancelIPForm(){editingIPIdx=-1;document.getElementById('ip-form-area').style.display='none';document.getElementById('ip-empty').style.display=ipDB.length===0?'block':'none';renderIPSidebar()}
 function clearIPForm(){['ip-name','ip-audience','ip-category','ip-zangking','ip-tags','ip-past','ip-visual'].forEach(id=>document.getElementById(id).value='')}
