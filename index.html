@@ -394,15 +394,23 @@ async function regenSingle(idx){
 
 async function regenWithMode(idx,mode){
   const ip=ipDB[selectedIP];
+  const t=topics[idx];
   const item=document.querySelector(`#topic-item-${idx} .topic-body`);
   item.innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">切換模式重新生成中</div>';
   try{
     const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:400,
-      system:`你是抖音短影音企劃，產出指定模式的腳本主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"${mode}","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}`,
-      messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}${ip.forbidden?'\n禁忌：'+ip.forbidden:''}\n請用【${mode}模式】產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
+      system:`你是抖音短影音企劃，保留主題標題，只改變企劃模式，只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"指定模式","hook":"新模式的開頭鉤子","conflict":"新模式的衝突笑點","ending":"新模式的結尾方向"}`,
+      messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}
+
+原本主題：${t.title}
+原本模式：${t.mode||'藏鏡人對話'}
+
+請保留【${t.title}】這個主題標題，改用【${mode}模式】重新設計hook、conflict、ending，不要改主題標題`}]});
     if(d.error)throw new Error(d.error.message);
     const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    topics[idx]=JSON.parse(txt);renderTopics();
+    const updated=JSON.parse(txt);
+    updated.title=t.title; // 強制保留原標題
+    topics[idx]=updated;renderTopics();
   }catch(e){renderTopics()}
 }
 
