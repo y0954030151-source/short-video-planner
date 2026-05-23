@@ -399,3 +399,37 @@ IP：台詞
     `).join('');
   }catch(e){output.innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
 }
+
+
+function save(){localStorage.setItem('svp_ip',JSON.stringify(ipDB));localStorage.setItem('svp_blogger',JSON.stringify(bloggerDB))}
+
+function renderIPSidebar(){document.getElementById('ip-sidebar-list').innerHTML=ipDB.map((ip,i)=>`<div class="sidebar-item ${editingIPIdx===i?'active':''}" onclick="editIP(${i})"><div class="sidebar-item-name">${ip.name}</div><div class="sidebar-item-meta">${ip.platform}</div></div>`).join('')}
+
+function newIP(){editingIPIdx=-1;clearIPForm();document.getElementById('ipFormTitle').textContent='新增 IP';document.getElementById('ipDeleteBtn').style.display='none';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
+
+function editIP(i){editingIPIdx=i;const ip=ipDB[i];document.getElementById('ipFormTitle').textContent='編輯 IP：'+ip.name;document.getElementById('ipDeleteBtn').style.display='inline-block';document.getElementById('ip-name').value=ip.name||'';document.getElementById('ip-platform').value=ip.platform||'抖音';document.getElementById('ip-audience').value=ip.audience||'';document.getElementById('ip-category').value=ip.category||'';document.getElementById('ip-zangking').value=ip.zangking||'';document.getElementById('ip-tags').value=ip.tags||'';document.getElementById('ip-modes').value=ip.modes||'';document.getElementById('ip-forbidden').value=ip.forbidden||'';document.getElementById('ip-past').value=ip.past||'';document.getElementById('ip-visual').value=ip.visual||'';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
+
+function saveIP(){const ip={name:document.getElementById('ip-name').value.trim(),platform:document.getElementById('ip-platform').value,audience:document.getElementById('ip-audience').value.trim(),category:document.getElementById('ip-category').value.trim(),zangking:document.getElementById('ip-zangking').value.trim(),tags:document.getElementById('ip-tags').value.trim(),modes:document.getElementById('ip-modes').value.trim(),forbidden:document.getElementById('ip-forbidden').value.trim(),past:document.getElementById('ip-past').value.trim(),visual:document.getElementById('ip-visual').value.trim()};if(!ip.name){alert('請填入 IP 名稱');return}if(editingIPIdx>=0)ipDB[editingIPIdx]=ip;else ipDB.push(ip);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
+
+function deleteIP(){if(!confirm(`確定刪除「${ipDB[editingIPIdx].name}」？`))return;ipDB.splice(editingIPIdx,1);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
+
+function cancelIPForm(){editingIPIdx=-1;document.getElementById('ip-form-area').style.display='none';document.getElementById('ip-empty').style.display=ipDB.length===0?'block':'none';renderIPSidebar()}
+
+function clearIPForm(){['ip-name','ip-audience','ip-category','ip-zangking','ip-tags','ip-modes','ip-forbidden','ip-past','ip-visual'].forEach(id=>document.getElementById(id).value='')}
+
+function renderBloggerSidebar(){document.getElementById('blogger-sidebar-list').innerHTML=bloggerDB.map((b,i)=>`<div class="sidebar-item ${editingBloggerIdx===i?'active':''}" onclick="editBlogger(${i})"><div class="sidebar-item-name">${b.name}</div><div class="sidebar-item-meta">${b.account||''}</div>${b.dna?'<div class="has-data">✦ 已學習DNA</div>':''}</div>`).join('')}
+
+function newBlogger(){editingBloggerIdx=-1;['b-name','b-account','b-style','b-dna'].forEach(id=>document.getElementById(id).value='');document.getElementById('bloggerFormTitle').textContent='新增博主';document.getElementById('bloggerDeleteBtn').style.display='none';document.getElementById('blogger-empty').style.display='none';document.getElementById('blogger-form-area').style.display='block';renderBloggerSidebar()}
+
+function editBlogger(i){editingBloggerIdx=i;const b=bloggerDB[i];document.getElementById('bloggerFormTitle').textContent='編輯博主：'+b.name;document.getElementById('bloggerDeleteBtn').style.display='inline-block';document.getElementById('b-name').value=b.name||'';document.getElementById('b-account').value=b.account||'';document.getElementById('b-style').value=b.style||'';document.getElementById('b-dna').value=b.dna||'';document.getElementById('blogger-empty').style.display='none';document.getElementById('blogger-form-area').style.display='block';renderBloggerSidebar()}
+
+function saveBlogger(){const b={name:document.getElementById('b-name').value.trim(),account:document.getElementById('b-account').value.trim(),style:document.getElementById('b-style').value.trim(),dna:document.getElementById('b-dna').value.trim()};if(!b.name){alert('請填入博主名稱');return}if(editingBloggerIdx>=0)bloggerDB[editingBloggerIdx]=b;else bloggerDB.push(b);save();cancelBloggerForm();renderBloggerSidebar();renderPlannerSidebar()}
+
+function deleteBlogger(){if(!confirm(`確定刪除「${bloggerDB[editingBloggerIdx].name}」？`))return;bloggerDB.splice(editingBloggerIdx,1);save();cancelBloggerForm();renderBloggerSidebar();renderPlannerSidebar()}
+
+function cancelBloggerForm(){editingBloggerIdx=-1;document.getElementById('blogger-form-area').style.display='none';document.getElementById('blogger-empty').style.display=bloggerDB.length===0?'block':'none';renderBloggerSidebar()}
+
+checkApiKey();
+</script>
+</body>
+</html>
