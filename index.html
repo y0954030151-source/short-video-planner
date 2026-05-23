@@ -401,6 +401,11 @@ IP：台詞
 }
 
 
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function escHtml(t){return esc(t)}
+function copyScript(btn,i){const el=document.getElementById('script-'+i);navigator.clipboard.writeText(el.textContent);btn.textContent='已複製！';setTimeout(()=>btn.textContent='複製',1500)}
+function copyAll(){const all=[...document.querySelectorAll('.script-body')].map(e=>e.textContent).join('\n\n---\n\n');navigator.clipboard.writeText(all);alert('已複製全部腳本！')}
+
 function save(){localStorage.setItem('svp_ip',JSON.stringify(ipDB));localStorage.setItem('svp_blogger',JSON.stringify(bloggerDB))}
 
 function renderIPSidebar(){document.getElementById('ip-sidebar-list').innerHTML=ipDB.map((ip,i)=>`<div class="sidebar-item ${editingIPIdx===i?'active':''}" onclick="editIP(${i})"><div class="sidebar-item-name">${ip.name}</div><div class="sidebar-item-meta">${ip.platform}</div></div>`).join('')}
