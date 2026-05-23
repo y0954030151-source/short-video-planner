@@ -116,9 +116,12 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       <p class="page-title">確認萃取資訊</p>
       <p class="page-sub">確認內容是否正確，如偵測到特定類型可勾選必帶元素</p>
       <div class="card" id="extractedCard"></div>
-      <div id="elementsCard" style="display:none;" class="card">
-        <div class="card-title">偵測到的內容類型 — 勾選必帶元素</div>
-        <div id="detectedTypes" style="margin-bottom:12px;"></div>
+      <div id="elementsCard" class="card">
+        <div class="card-title">選擇內容類型 — 勾選必帶元素</div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">點選類型來展開必帶元素（可多選）</div>
+          <div id="typeButtons"></div>
+        </div>
         <div id="elementsList"></div>
       </div>
       <div class="btn-row">
@@ -335,40 +338,48 @@ function renderPlannerSidebar(){
 function selectIP(i){selectedIP=i;renderPlannerSidebar()}
 function selectBlogger(i){selectedBlogger=i;renderPlannerSidebar()}
 
-function detectTypes(text){
-  const detected=[];
-  if(/直播|主播|團播|陪聊|聲播/.test(text))detected.push('直播主');
-  if(/理財|信用卡|投資|增貸|套利|財商|基金|股|養信用/.test(text))detected.push('理財');
-  if(/富婆|保時捷|買房|螺絲粉|千萬|混血/.test(text))detected.push('富婆日常');
-  return detected;
+let activeTypes=new Set();
+
+function renderTypeButtons(){
+  const btnDiv=document.getElementById('typeButtons');
+  const listDiv=document.getElementById('elementsList');
+  selectedElements=[];
+  activeTypes=new Set();
+  btnDiv.innerHTML=Object.keys(ELEMENT_DB).map(t=>`
+    <span class="type-badge" onclick="toggleTypeBtn('${t}',this)" style="font-size:13px;padding:6px 14px;margin:4px;">${ELEMENT_DB[t].label}</span>
+  `).join('');
+  listDiv.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;">點選上方類型來展開必帶元素</div>';
 }
 
-function renderElements(types){
-  const card=document.getElementById('elementsCard');
-  const typeDiv=document.getElementById('detectedTypes');
+function toggleTypeBtn(type,btn){
+  btn.classList.toggle('active');
+  if(btn.classList.contains('active')){
+    activeTypes.add(type);
+  } else {
+    activeTypes.delete(type);
+    ELEMENT_DB[type].elements.forEach((el,i)=>{
+      selectedElements=selectedElements.filter(e=>e!==el);
+    });
+  }
+  renderElementsList();
+}
+
+function renderElementsList(){
   const listDiv=document.getElementById('elementsList');
-  if(types.length===0){card.style.display='none';return}
-  card.style.display='block';
-  selectedElements=[];
-  typeDiv.innerHTML=types.map(t=>`<span class="type-badge active" onclick="toggleType('${t}',this)">${ELEMENT_DB[t].label}</span>`).join('');
+  if(activeTypes.size===0){
+    listDiv.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;">點選上方類型來展開必帶元素</div>';
+    return;
+  }
   let html='';
-  types.forEach(t=>{
+  activeTypes.forEach(t=>{
+    html+=`<div style="font-size:11px;color:var(--accent);margin:12px 0 6px;font-family:Space Mono,monospace;">${ELEMENT_DB[t].label}</div>`;
     ELEMENT_DB[t].elements.forEach((el,i)=>{
       const id=`el-${t}-${i}`;
-      html+=`<div class="element-check"><input type="checkbox" id="${id}" value="${el}" onchange="toggleElement(this)" checked><label for="${id}" style="cursor:pointer;font-size:13px;">${el}</label></div>`;
-      selectedElements.push(el);
+      const checked=selectedElements.includes(el);
+      html+=`<div class="element-check"><input type="checkbox" id="${id}" value="${el}" onchange="toggleElement(this)" ${checked?'checked':''}><label for="${id}" style="cursor:pointer;font-size:13px;">${el}</label></div>`;
     });
   });
   listDiv.innerHTML=html;
-}
-
-function toggleType(type,btn){
-  btn.classList.toggle('active');
-  const isActive=btn.classList.contains('active');
-  ELEMENT_DB[type].elements.forEach((el,i)=>{
-    const cb=document.getElementById(`el-${type}-${i}`);
-    if(cb){cb.checked=isActive;toggleElement(cb)}
-  });
 }
 
 function toggleElement(cb){
@@ -400,8 +411,7 @@ async function analyzeTranscript(){
       ${extracted.restrictions?`<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">注意事項</div><div style="font-size:13px;color:#ff8a8a;">${extracted.restrictions}</div></div>`:''}
       ${extracted.specified_topics?`<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--accent);margin-bottom:4px;">✦ 指定企劃方向</div><div style="font-size:13px;color:var(--accent);">${extracted.specified_topics}</div></div>`:''}
       <div><div style="font-size:11px;color:var(--text3);margin-bottom:6px;">關鍵洞察</div>${(extracted.insights||[]).map(k=>`<div style="font-size:13px;color:var(--text2);margin-bottom:4px;">• ${k}</div>`).join('')}</div>`;
-    const detectedTypes=detectTypes(document.getElementById('transcriptInput').value);
-    renderElements(detectedTypes);
+    renderTypeButtons();
   }catch(e){card.innerHTML=`<div style="color:var(--red);font-size:13px;">分析失敗：${e.message}</div>`}
 }
 
