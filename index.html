@@ -179,7 +179,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       </div>
       <div class="card">
         <div class="card-title">學習素材</div>
-        <div class="field"><label>過去企劃（貼入最具代表性的 5-8 支腳本）</label><textarea id="ip-past" style="min-height:160px;" placeholder="貼入過去腳本，AI 會學習：&#10;• 藏的說話風格&#10;• IP 的真實背景&#10;• 腳本格式與節奏"></textarea></div>
+        <div class="field"><label>過去企劃（貼入最具代表性的 5-8 支腳本）</label><textarea id="ip-past" style="min-height:160px;" placeholder="建議格式：&#10;&#10;【腳本風格指南】&#10;（貼入風格描述）&#10;&#10;【藏鏡人對話模式範例 x2】&#10;（貼入2支最標準的藏鏡人腳本）&#10;&#10;【旁白模式範例 x1】&#10;（貼入1支最標準的旁白腳本）&#10;&#10;【遊戲挑戰模式範例 x1】&#10;（貼入1支最標準的遊戲挑戰腳本）&#10;&#10;建議總字數控制在3000字以內"></textarea></div>
         <div class="field" style="margin:0;"><label>視覺風格備註</label><textarea id="ip-visual" style="min-height:60px;" placeholder="例：字幕大字白底、戶外場景為主"></textarea></div>
       </div>
     </div>
@@ -315,7 +315,7 @@ async function generateTopics(){
   listEl.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;padding:1rem 0;">生成主題中（第1批）</div>';showStep(3);
   const bCtx=blogger?`\n參考博主：${blogger.name}，風格：${blogger.style}${blogger.dna?`\n風格DNA：${blogger.dna.substring(0,200)}`:''}`:''
   const bgCtx=ip.background?`\nIP真實背景：${ip.background}`:'';
-  const pCtx=ip.past?`\n過去企劃風格參考：\n${ip.past.substring(0,400)}`:'';
+  const pCtx=ip.past?`\n過去企劃風格參考：\n${ip.past.substring(0,1500)}`:'';
   const specCtx=extracted.specified_topics?`\n【指定必須包含的方向】：${extracted.specified_topics}`:'';
   const forbCtx=ip.forbidden?`\n人設禁忌：${ip.forbidden}`:'';
 
@@ -412,7 +412,7 @@ async function expandScripts(){
   const output=document.getElementById('scriptsOutput');
   output.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">生成腳本中</div>';showStep(4);
   const selected=checked.map(i=>topics[i]);
-  const pastEx=ip.past?`\n\n【過去企劃範例，嚴格學習以下格式與風格】\n${ip.past.substring(0,800)}`:'';
+  const pastEx=ip.past?`\n\n【過去企劃範例，嚴格學習以下格式與風格】\n${ip.past.substring(0,3000)}`:'';
   const bgCtx=ip.background?`\nIP真實背景（必須反映在腳本中）：${ip.background}`:'';
 
   const sys=`你是抖音短影音企劃專家。嚴格按照以下規則產出腳本：
