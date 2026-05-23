@@ -256,7 +256,9 @@ async function analyzeTranscript(){
   card.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">分析中</div>';showStep(2);
   try{
     const d=await callAPI({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`你是短影音企劃助手。分析逐字稿萃取資訊，只回傳JSON不要有其他文字。格式：{"product":"產品服務","usp":"核心賣點","audience":"目標受眾","tone":"語氣調性","restrictions":"禁忌（無則空字串）","insights":["洞察1","洞察2","洞察3"]}`,messages:[{role:'user',content:`IP：${ip.name}，受眾：${ip.audience}，風格：${ip.tags}\n\n逐字稿：\n${t}`}]});
-    const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    if(d.error){throw new Error(d.error.message||JSON.stringify(d.error))}
+    const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    if(!txt){throw new Error('API 回傳空白，請確認金鑰與額度')}
     extracted=JSON.parse(txt);
     card.innerHTML=`<div class="card-title">AI 萃取結果</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;"><div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">產品/服務</div><div style="font-size:14px;">${extracted.product}</div></div><div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">核心賣點</div><div style="font-size:14px;">${extracted.usp}</div></div><div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">目標受眾</div><div style="font-size:14px;">${extracted.audience}</div></div><div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">語氣調性</div><div style="font-size:14px;">${extracted.tone}</div></div></div>${extracted.restrictions?`<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">注意事項</div><div style="font-size:13px;color:#ff8a8a;">${extracted.restrictions}</div></div>`:''}<div><div style="font-size:11px;color:var(--text3);margin-bottom:6px;">關鍵洞察</div>${(extracted.insights||[]).map(k=>`<div style="font-size:13px;color:var(--text2);margin-bottom:4px;">• ${k}</div>`).join('')}</div>`;
   }catch(e){card.innerHTML=`<div style="color:var(--red);font-size:13px;">分析失敗：${e.message}</div>`}
@@ -269,7 +271,7 @@ async function generateTopics(){
   const pCtx=ip.past?`\n過去企劃：\n${ip.past.substring(0,500)}`:''
   try{
     const d=await callAPI({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]（共10個）`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
-    const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     topics=JSON.parse(txt);renderTopics();
   }catch(e){document.getElementById('topicsList').innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
 }
@@ -283,7 +285,7 @@ async function regenSingle(idx){
   document.querySelector(`#topic-item-${idx} .topic-body`).innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">重新生成中</div>';
   try{
     const d=await callAPI({model:'claude-sonnet-4-20250514',max_tokens:400,system:`你是抖音短影音企劃，產出1個新主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}，賣點：${extracted.usp}\n請產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
-    const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     topics[idx]=JSON.parse(txt);renderTopics();
   }catch(e){renderTopics()}
 }
