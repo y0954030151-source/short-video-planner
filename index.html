@@ -270,7 +270,7 @@ async function generateTopics(){
   const bCtx=blogger?`\n參考博主：${blogger.name}，風格：${blogger.style}${blogger.dna?`\n風格DNA：${blogger.dna.substring(0,300)}`:''}`:''
   const pCtx=ip.past?`\n過去企劃：\n${ip.past.substring(0,500)}`:''
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]（共10個，每個欄位控制在20字以內）`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]共10個，每欄位15字內。嚴格規則：1.主題必須完全符合IP人設，不能出現與人設矛盾的情境 2.hook必須是強衝突開場，前3秒製造反差或誇張張力讓人停下來 3.仔細閱讀過去企劃學習風格節奏，生成結果要與之一致`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
     const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     topics=JSON.parse(txt);renderTopics();
   }catch(e){document.getElementById('topicsList').innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
