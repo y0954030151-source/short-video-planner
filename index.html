@@ -342,21 +342,25 @@ async function expandScripts(){
   output.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">生成腳本中</div>';showStep(4);
   const selected=checked.map(i=>topics[i]);
 
-  const sys=`你是抖音短影音企劃專家，產出完整腳本。嚴格規則：
-1.不能使用markdown格式（不能用**粗體**或#標題），純文字輸出
-2.不能編造具體數字（金額、張數、坪數等），用「很多」「幾百萬」等模糊表達
-3.台詞要自然口語，符合IP人設
-4.格式嚴格如下：
+  const pastExample=ip.past?`
 
-【主題標題】
-目的：一句話核心記憶點
-人物：• 藏（關係）• IP（名稱）
-事件：2-3行劇情摘要
+【過去企劃範例，請嚴格學習以下格式、藏的說話風格、IP的真實背景】
+${ip.past.substring(0,800)}`:'';
+
+  const sys=`你是抖音短影音企劃專家。請嚴格按照以下規則產出腳本：
+
+格式規則（非常重要）：
+1.純文字輸出，不能用markdown（不能有**粗體**或#標題）
+2.不能分多幕，只有「第一幕」和「結尾」兩段
+3.不能編造具體數字，用「很多」「幾百萬」等模糊表達
+4.格式完全照以下：
 
 第一幕：（場景說明）
 IP：台詞
 藏：台詞
 （畫面動作說明）
+IP：台詞
+藏：台詞
 
 結尾：
 藏：台詞
@@ -365,26 +369,36 @@ IP：台詞
 大綱：
 1. 分鏡點
 2. 分鏡點
+3. 分鏡點
 
----`;
+人物規則：
+- 藏是毒舌損友，說話直白刻薄帶點無賴感，不是乖乖助理
+- IP說話自信霸氣，偶爾翻白眼，不會被藏欺負
+- 台詞要口語自然，像真實對話不像劇本
+- IP的真實背景（螺絲粉店、保時捷、理財顧問等）要正確反映在腳本中`;
 
   try{
-    // 一次只生成一個腳本，用迴圈跑
     const results=[];
     for(let i=0;i<selected.length;i++){
       const t=selected[i];
       output.innerHTML=`<div class="loading" style="color:var(--text2);font-size:13px;">生成腳本 ${i+1}/${selected.length} 中</div>`;
       const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:sys,
-        messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}（${ip.tags}），受眾：${ip.audience}
-產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${ip.forbidden?'\n禁忌：'+ip.forbidden:''}
+        messages:[{role:'user',content:`IP資料：
+名字：${ip.name}
+藏鏡人：${ip.zangking}
+受眾：${ip.audience}
+風格：${ip.tags}
+人設禁忌：${ip.forbidden||'無'}${pastExample}
 
 請為以下主題產出完整腳本：
 主題：${t.title}
 模式：${t.mode||'藏鏡人對話'}
-鉤子：${t.hook}
-衝突：${t.conflict}
-結尾：${t.ending}`}]});
+開頭鉤子：${t.hook}
+衝突設計：${t.conflict}
+結尾方向：${t.ending}
+產品背景：${extracted.product}，${extracted.usp}`}]});
       const txt=d.content.map(c=>c.text||'').join('');
+      if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
       results.push({title:t.title,script:txt.trim()});
     }
 
@@ -399,42 +413,4 @@ IP：台詞
     `).join('');
   }catch(e){output.innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
 }
-
-
-function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function escHtml(t){return esc(t)}
-function copyScript(btn,i){const el=document.getElementById('script-'+i);navigator.clipboard.writeText(el.textContent);btn.textContent='已複製！';setTimeout(()=>btn.textContent='複製',1500)}
-function copyAll(){const all=[...document.querySelectorAll('.script-body')].map(e=>e.textContent).join('\n\n---\n\n');navigator.clipboard.writeText(all);alert('已複製全部腳本！')}
-
-function save(){localStorage.setItem('svp_ip',JSON.stringify(ipDB));localStorage.setItem('svp_blogger',JSON.stringify(bloggerDB))}
-
-function renderIPSidebar(){document.getElementById('ip-sidebar-list').innerHTML=ipDB.map((ip,i)=>`<div class="sidebar-item ${editingIPIdx===i?'active':''}" onclick="editIP(${i})"><div class="sidebar-item-name">${ip.name}</div><div class="sidebar-item-meta">${ip.platform}</div></div>`).join('')}
-
-function newIP(){editingIPIdx=-1;clearIPForm();document.getElementById('ipFormTitle').textContent='新增 IP';document.getElementById('ipDeleteBtn').style.display='none';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
-
-function editIP(i){editingIPIdx=i;const ip=ipDB[i];document.getElementById('ipFormTitle').textContent='編輯 IP：'+ip.name;document.getElementById('ipDeleteBtn').style.display='inline-block';document.getElementById('ip-name').value=ip.name||'';document.getElementById('ip-platform').value=ip.platform||'抖音';document.getElementById('ip-audience').value=ip.audience||'';document.getElementById('ip-category').value=ip.category||'';document.getElementById('ip-zangking').value=ip.zangking||'';document.getElementById('ip-tags').value=ip.tags||'';document.getElementById('ip-modes').value=ip.modes||'';document.getElementById('ip-forbidden').value=ip.forbidden||'';document.getElementById('ip-past').value=ip.past||'';document.getElementById('ip-visual').value=ip.visual||'';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
-
-function saveIP(){const ip={name:document.getElementById('ip-name').value.trim(),platform:document.getElementById('ip-platform').value,audience:document.getElementById('ip-audience').value.trim(),category:document.getElementById('ip-category').value.trim(),zangking:document.getElementById('ip-zangking').value.trim(),tags:document.getElementById('ip-tags').value.trim(),modes:document.getElementById('ip-modes').value.trim(),forbidden:document.getElementById('ip-forbidden').value.trim(),past:document.getElementById('ip-past').value.trim(),visual:document.getElementById('ip-visual').value.trim()};if(!ip.name){alert('請填入 IP 名稱');return}if(editingIPIdx>=0)ipDB[editingIPIdx]=ip;else ipDB.push(ip);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
-
-function deleteIP(){if(!confirm(`確定刪除「${ipDB[editingIPIdx].name}」？`))return;ipDB.splice(editingIPIdx,1);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
-
-function cancelIPForm(){editingIPIdx=-1;document.getElementById('ip-form-area').style.display='none';document.getElementById('ip-empty').style.display=ipDB.length===0?'block':'none';renderIPSidebar()}
-
-function clearIPForm(){['ip-name','ip-audience','ip-category','ip-zangking','ip-tags','ip-modes','ip-forbidden','ip-past','ip-visual'].forEach(id=>document.getElementById(id).value='')}
-
-function renderBloggerSidebar(){document.getElementById('blogger-sidebar-list').innerHTML=bloggerDB.map((b,i)=>`<div class="sidebar-item ${editingBloggerIdx===i?'active':''}" onclick="editBlogger(${i})"><div class="sidebar-item-name">${b.name}</div><div class="sidebar-item-meta">${b.account||''}</div>${b.dna?'<div class="has-data">✦ 已學習DNA</div>':''}</div>`).join('')}
-
-function newBlogger(){editingBloggerIdx=-1;['b-name','b-account','b-style','b-dna'].forEach(id=>document.getElementById(id).value='');document.getElementById('bloggerFormTitle').textContent='新增博主';document.getElementById('bloggerDeleteBtn').style.display='none';document.getElementById('blogger-empty').style.display='none';document.getElementById('blogger-form-area').style.display='block';renderBloggerSidebar()}
-
-function editBlogger(i){editingBloggerIdx=i;const b=bloggerDB[i];document.getElementById('bloggerFormTitle').textContent='編輯博主：'+b.name;document.getElementById('bloggerDeleteBtn').style.display='inline-block';document.getElementById('b-name').value=b.name||'';document.getElementById('b-account').value=b.account||'';document.getElementById('b-style').value=b.style||'';document.getElementById('b-dna').value=b.dna||'';document.getElementById('blogger-empty').style.display='none';document.getElementById('blogger-form-area').style.display='block';renderBloggerSidebar()}
-
-function saveBlogger(){const b={name:document.getElementById('b-name').value.trim(),account:document.getElementById('b-account').value.trim(),style:document.getElementById('b-style').value.trim(),dna:document.getElementById('b-dna').value.trim()};if(!b.name){alert('請填入博主名稱');return}if(editingBloggerIdx>=0)bloggerDB[editingBloggerIdx]=b;else bloggerDB.push(b);save();cancelBloggerForm();renderBloggerSidebar();renderPlannerSidebar()}
-
-function deleteBlogger(){if(!confirm(`確定刪除「${bloggerDB[editingBloggerIdx].name}」？`))return;bloggerDB.splice(editingBloggerIdx,1);save();cancelBloggerForm();renderBloggerSidebar();renderPlannerSidebar()}
-
-function cancelBloggerForm(){editingBloggerIdx=-1;document.getElementById('blogger-form-area').style.display='none';document.getElementById('blogger-empty').style.display=bloggerDB.length===0?'block':'none';renderBloggerSidebar()}
-
-checkApiKey();
-</script>
-</body>
-</html>
+>
