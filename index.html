@@ -255,7 +255,7 @@ async function analyzeTranscript(){
   const ip=ipDB[selectedIP];const card=document.getElementById('extractedCard');
   card.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">分析中</div>';showStep(2);
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:1000,system:`你是短影音企劃助手。分析逐字稿萃取資訊，只回傳JSON不要有其他文字。格式：{"product":"產品服務","usp":"核心賣點","audience":"目標受眾","tone":"語氣調性","restrictions":"禁忌（無則空字串）","insights":["洞察1","洞察2","洞察3"]}`,messages:[{role:'user',content:`IP：${ip.name}，受眾：${ip.audience}，風格：${ip.tags}\n\n逐字稿：\n${t}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是短影音企劃助手。分析逐字稿萃取資訊，只回傳JSON不要有其他文字。格式：{"product":"產品服務","usp":"核心賣點","audience":"目標受眾","tone":"語氣調性","restrictions":"禁忌（無則空字串）","insights":["洞察1","洞察2","洞察3"]}`,messages:[{role:'user',content:`IP：${ip.name}，受眾：${ip.audience}，風格：${ip.tags}\n\n逐字稿：\n${t}`}]});
     if(d.error){throw new Error(d.error.message||JSON.stringify(d.error))}
     const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     if(!txt){throw new Error('API 回傳空白，請確認金鑰與額度')}
@@ -270,7 +270,7 @@ async function generateTopics(){
   const bCtx=blogger?`\n參考博主：${blogger.name}，風格：${blogger.style}${blogger.dna?`\n風格DNA：${blogger.dna.substring(0,300)}`:''}`:''
   const pCtx=ip.past?`\n過去企劃：\n${ip.past.substring(0,500)}`:''
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]（共10個）`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。格式：[{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}]（共10個，每個欄位控制在20字以內）`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pCtx}`}]});
     const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     topics=JSON.parse(txt);renderTopics();
   }catch(e){document.getElementById('topicsList').innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
@@ -284,7 +284,7 @@ async function regenSingle(idx){
   const ip=ipDB[selectedIP];
   document.querySelector(`#topic-item-${idx} .topic-body`).innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">重新生成中</div>';
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:400,system:`你是抖音短影音企劃，產出1個新主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}，賣點：${extracted.usp}\n請產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出1個新主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}，賣點：${extracted.usp}\n請產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
     const txt=(d.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     topics[idx]=JSON.parse(txt);renderTopics();
   }catch(e){renderTopics()}
@@ -297,7 +297,7 @@ async function expandScripts(){
   document.getElementById('scriptsOutput').innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">生成腳本中</div>';showStep(4);
   const selected=checked.map(i=>topics[i]);
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:1000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡完整腳本。每個腳本格式：\n\n【主題標題】\n目的：一句話核心記憶點\n人物：• 藏（關係）• IP（名稱）\n事件：2-3行劇情摘要\n\n第一幕：（場景說明）\nIP：台詞\n藏：台詞\n（畫面動作）\n\n結尾：\n藏：台詞\nIP：台詞\n\n大綱：\n1. 分鏡點\n2. 分鏡點\n\n---`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}（${ip.tags}），受眾：${ip.audience}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}\n\n請為以下${selected.length}個主題各產出完整腳本：\n${selected.map((t,i)=>`${i+1}. ${t.title}（鉤子：${t.hook}，衝突：${t.conflict}，結尾：${t.ending}）`).join('\n')}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:4000,system:`你是抖音短影音企劃，產出藏鏡人模式雙人出鏡完整腳本。每個腳本格式：\n\n【主題標題】\n目的：一句話核心記憶點\n人物：• 藏（關係）• IP（名稱）\n事件：2-3行劇情摘要\n\n第一幕：（場景說明）\nIP：台詞\n藏：台詞\n（畫面動作）\n\n結尾：\n藏：台詞\nIP：台詞\n\n大綱：\n1. 分鏡點\n2. 分鏡點\n\n---`,messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}（${ip.tags}），受眾：${ip.audience}\n產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}\n\n請為以下${selected.length}個主題各產出完整腳本：\n${selected.map((t,i)=>`${i+1}. ${t.title}（鉤子：${t.hook}，衝突：${t.conflict}，結尾：${t.ending}）`).join('\n')}`}]});
     const fullText=d.content.map(c=>c.text||'').join('');
     const parts=fullText.split('---').filter(p=>p.trim());
     document.getElementById('scriptsOutput').innerHTML=selected.map((t,i)=>`<div class="script-card"><div class="script-header"><div class="script-title">${t.title}</div><button class="btn btn-outline btn-sm" onclick="copyScript(this,${i})">複製</button></div><div class="script-body" id="script-${i}">${esc(parts[i]?parts[i].trim():'生成中...')}</div></div>`).join('');
