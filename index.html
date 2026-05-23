@@ -274,14 +274,14 @@ const ELEMENT_DB = {
   '富婆日常': {
     label: '富婆人設相關',
     elements: [
-      '22歲買兩棟房的故事',
-      '保時捷是第四台車',
-      '17歲賺到第一個千萬',
-      '有兩間螺絲粉店',
-      '身邊夥伴都是高收入女性',
-      '混血兒身份反差',
-      '醫美/投資自己的觀念',
-      '記帳習慣從16歲開始',
+      '炫富反差（看似平凡的事被富婆做出不同感）',
+      '精品/奢侈品消費觀輸出（不是炫耀是投資自己）',
+      '身邊夥伴都是高收入圈層',
+      '年輕就財務自由的成長故事',
+      '醫美/投資外表的觀念',
+      '記帳自律習慣帶出財商',
+      '帶出IP過去窮困到現在的反差',
+      '消費有邏輯（哪些該花哪些不該花）',
     ]
   }
 };
@@ -457,13 +457,13 @@ async function generateTopics(){
 產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pastCtx}${learnedCtx}`;
 
   try{
-    const d1=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:sys,
+    const d1=await callAPI({model:'claude-sonnet-4-5',max_tokens:3000,system:sys,
       messages:[{role:'user',content:basePrompt+(extracted.specified_topics?`\n\n【重要】指定方向必須優先出現：${extracted.specified_topics}`:'')+'\n請產出第1-5個主題'}]});
     if(d1.error)throw new Error(d1.error.message);
     const t1=(d1.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     const batch1=JSON.parse(t1);
     listEl.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;padding:1rem 0;">生成主題中（第2批）</div>';
-    const d2=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:sys,
+    const d2=await callAPI({model:'claude-sonnet-4-5',max_tokens:3000,system:sys,
       messages:[{role:'user',content:basePrompt+`\n已有主題：${batch1.map(t=>t.title).join('、')}\n請產出5個不同的新主題（第6-10個）`}]});
     if(d2.error)throw new Error(d2.error.message);
     const t2=(d2.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
