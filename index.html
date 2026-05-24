@@ -693,6 +693,9 @@ function saveBlogger(){
 function deleteBlogger(){if(!confirm(`確定刪除「${bloggerDB[editingBloggerIdx].name}」？`))return;bloggerDB.splice(editingBloggerIdx,1);save();cancelBloggerForm();renderBloggerSidebar();renderPlannerSidebar()}
 function cancelBloggerForm(){editingBloggerIdx=-1;document.getElementById('blogger-form-area').style.display='none';document.getElementById('blogger-empty').style.display=bloggerDB.length===0?'block':'none';renderBloggerSidebar()}
 
+function getApiKey(){return localStorage.getItem('svp_apikey')||''}
+function save(){localStorage.setItem('svp_ip',JSON.stringify(ipDB));localStorage.setItem('svp_blogger',JSON.stringify(bloggerDB))}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function saveApiKey(){const k=document.getElementById('apiKeyInput').value.trim();if(!k.startsWith('sk-')){alert('請輸入正確的 API 金鑰');return}localStorage.setItem('svp_apikey',k);document.getElementById('apiSetup').style.display='none';init()}
 function resetApiKey(){localStorage.removeItem('svp_apikey');document.getElementById('apiKeyInput').value='';document.getElementById('apiSetup').style.display='flex'}
 function checkApiKey(){if(getApiKey()){document.getElementById('apiSetup').style.display='none';init()}}
