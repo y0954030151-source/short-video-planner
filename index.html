@@ -260,6 +260,10 @@ const ELEMENT_DB={
   '富婆日常':{label:'富婆人設相關',elements:['炫富反差（看似平凡的事被富婆做出不同感）','精品消費觀（不是炫耀是投資自己）','身邊夥伴都是高收入圈層','年輕就財務自由的成長故事','醫美/投資外表的觀念','記帳自律習慣帶出財商','帶出IP過去窮困到現在的反差','消費有邏輯（哪些該花哪些不該花）']}
 };
 
+let ipDB=JSON.parse(localStorage.getItem('svp_ip')||'[]');
+let bloggerDB=JSON.parse(localStorage.getItem('svp_blogger')||'[]');
+let selectedIP=null,selectedBlogger=null,editingIPIdx=-1,editingBloggerIdx=-1,topics=[],extracted={},planPoints=[],selectedElements=[],activeTypes=new Set();
+
 const SCRIPT_TRAINING=`【爆款腳本通用訓練教材】
 
 最重要的核心概念：
@@ -691,6 +695,8 @@ function cancelBloggerForm(){editingBloggerIdx=-1;document.getElementById('blogg
 
 function saveApiKey(){const k=document.getElementById('apiKeyInput').value.trim();if(!k.startsWith('sk-')){alert('請輸入正確的 API 金鑰');return}localStorage.setItem('svp_apikey',k);document.getElementById('apiSetup').style.display='none';init()}
 function resetApiKey(){localStorage.removeItem('svp_apikey');document.getElementById('apiKeyInput').value='';document.getElementById('apiSetup').style.display='flex'}
+function checkApiKey(){if(getApiKey()){document.getElementById('apiSetup').style.display='none';init()}}
+function init(){renderPlannerSidebar();renderIPSidebar();renderBloggerSidebar()}
 
 checkApiKey();
 </script>
