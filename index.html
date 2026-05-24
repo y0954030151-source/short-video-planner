@@ -334,7 +334,13 @@ IP：一句話收，有道理有笑點
 
 目的：一句話
 人物：• IP（角色）• 藏（關係）
-事件：3-5行說明`
+事件：3-5行說明`;
+
+function renderScriptText(text){
+  return text.split('\n').map(line=>{
+    const trimmed=line.trim();
+    if(trimmed.startsWith('藏：')||trimmed.startsWith('藏:'))
+      return `<div class="line-zang">${escHtml(line)}</div>`;
     if(trimmed.startsWith('IP：')||trimmed.startsWith('IP:')||trimmed.startsWith('妮妮：')||trimmed.startsWith('妮妮:'))
       return `<div class="line-ip">${escHtml(line)}</div>`;
     if(trimmed.startsWith('（')||trimmed.startsWith('('))
@@ -682,6 +688,9 @@ function saveBlogger(){
 }
 function deleteBlogger(){if(!confirm(`確定刪除「${bloggerDB[editingBloggerIdx].name}」？`))return;bloggerDB.splice(editingBloggerIdx,1);save();cancelBloggerForm();renderBloggerSidebar();renderPlannerSidebar()}
 function cancelBloggerForm(){editingBloggerIdx=-1;document.getElementById('blogger-form-area').style.display='none';document.getElementById('blogger-empty').style.display=bloggerDB.length===0?'block':'none';renderBloggerSidebar()}
+
+function saveApiKey(){const k=document.getElementById('apiKeyInput').value.trim();if(!k.startsWith('sk-')){alert('請輸入正確的 API 金鑰');return}localStorage.setItem('svp_apikey',k);document.getElementById('apiSetup').style.display='none';init()}
+function resetApiKey(){localStorage.removeItem('svp_apikey');document.getElementById('apiKeyInput').value='';document.getElementById('apiSetup').style.display='flex'}
 
 checkApiKey();
 </script>
