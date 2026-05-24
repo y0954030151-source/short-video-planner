@@ -27,7 +27,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .content{flex:1;overflow-y:auto;max-height:calc(100vh - 57px);padding:28px 32px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:16px}
 .card-title{font-size:13px;color:var(--text2);margin-bottom:12px;font-family:'Space Mono',monospace;letter-spacing:.05em}
-.field{margin-bottom:16px}.field label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;letter-spacing:.03em}
+.field{margin-bottom:16px}.field label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px}
 input,textarea,select{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Noto Sans TC',sans-serif;transition:border-color .15s;outline:none}
 input:focus,textarea:focus,select:focus{border-color:var(--accent)}
 textarea{resize:vertical;min-height:80px;line-height:1.6}select option{background:var(--bg2)}
@@ -39,8 +39,8 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
 .btn-learn{background:rgba(200,245,90,0.1);color:var(--accent);border:1px solid rgba(200,245,90,0.3)}.btn-learn:hover{background:rgba(200,245,90,0.2)}
 .btn-sm{padding:6px 12px;font-size:12px}
 .btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
-.topic-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;transition:border-color .15s}
-.topic-item:hover{border-color:var(--border2)}.topic-item.selected{border-color:var(--accent)}
+.topic-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.topic-item.selected{border-color:var(--accent)}
 .topic-item input[type=checkbox]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--accent);cursor:pointer}
 .topic-num{font-family:'Space Mono',monospace;font-size:11px;color:var(--text3);margin-top:3px;flex-shrink:0;width:20px}
 .topic-body{flex:1}.topic-title{font-size:14px;font-weight:500;margin-bottom:6px;cursor:pointer}
@@ -49,7 +49,15 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
 .script-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
 .script-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
 .script-title{font-size:14px;font-weight:500}
-.script-body{width:100%;padding:20px;font-size:13px;line-height:1.9;color:var(--text);max-height:500px;overflow-y:auto;background:var(--bg2);border:none;outline:none;resize:none;font-family:'Noto Sans TC',sans-serif}
+.script-layout{display:grid;grid-template-columns:1fr 280px;gap:0}
+.script-left{padding:20px;border-right:1px solid var(--border)}
+.script-right{padding:20px;background:var(--bg3);font-size:12px;line-height:1.8}
+.script-right-title{font-size:11px;color:var(--text3);font-family:'Space Mono',monospace;margin-bottom:6px;margin-top:12px}
+.script-right-title:first-child{margin-top:0}
+.script-body-edit{width:100%;background:transparent;border:none;outline:none;font-size:13px;line-height:2;color:var(--text);font-family:'Noto Sans TC',sans-serif;resize:none;min-height:300px}
+.line-zang{color:#5ab4ff}
+.line-ip{color:#ff8a65}
+.line-action{color:var(--text3);font-style:italic}
 .info-box{background:rgba(90,180,255,.06);border:1px solid rgba(90,180,255,.2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--blue);margin-bottom:16px;line-height:1.6}
 .empty{text-align:center;padding:48px 0;color:var(--text3)}.empty-icon{font-size:32px;margin-bottom:12px}
 .loading::after{content:'';animation:dots 1.2s infinite}
@@ -64,11 +72,16 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
 .page-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
 .has-data{font-size:11px;color:var(--accent);margin-top:4px}
 .mode-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(200,245,90,0.1);color:var(--accent);border:1px solid rgba(200,245,90,0.3);margin-bottom:6px}
+.point-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .15s}
+.point-item:hover{border-color:var(--border2)}.point-item.selected{border-color:var(--accent);background:rgba(200,245,90,0.05)}
+.point-item input{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--accent)}
+.point-text{font-size:13px;line-height:1.5}
 .element-check{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
 .element-check:last-child{border-bottom:none}
 .element-check input{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--accent)}
-.type-badge{display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;background:rgba(90,180,255,0.1);color:var(--blue);border:1px solid rgba(90,180,255,0.3);margin-right:6px;margin-bottom:4px;cursor:pointer}
-.type-badge.active{background:rgba(90,180,255,0.3)}
+.type-badge{display:inline-block;font-size:12px;padding:6px 14px;border-radius:20px;background:var(--bg3);color:var(--text2);border:1px solid var(--border2);margin:4px;cursor:pointer;transition:all .15s}
+.type-badge:hover{border-color:var(--border2);color:var(--text)}
+.type-badge.active{background:rgba(90,180,255,0.15);color:var(--blue);border-color:rgba(90,180,255,0.4)}
 </style>
 </head>
 <body>
@@ -93,7 +106,6 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
 </div>
 
 <div class="main">
-<!-- 企劃生成 -->
 <div id="tab-planner" style="display:flex;width:100%;">
   <div class="sidebar">
     <div class="sidebar-title">選擇 IP</div>
@@ -102,27 +114,26 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
     <div id="planner-blogger-list"></div>
   </div>
   <div class="content">
+    <!-- Step 1 -->
     <div id="p-step1">
       <p class="page-title">貼入逐字稿 / 企劃方向</p>
-      <p class="page-sub">選擇左側 IP，貼入逐字稿或自己的企劃方向後開始分析</p>
+      <p class="page-sub">選擇左側 IP，貼入後 AI 會先列出企劃點讓你確認</p>
       <div class="card">
         <div class="field"><label>逐字稿 / 企劃方向</label>
-        <textarea id="transcriptInput" style="min-height:200px;" placeholder="可以貼入：&#10;① 對焦會議逐字稿&#10;② 自己想的企劃方向（條列也可以）&#10;&#10;如有指定方向請加上：&#10;【指定企劃方向，必須包含】&#10;1. 方向一&#10;2. 方向二"></textarea></div>
-        <div class="btn-row"><button class="btn btn-primary" onclick="analyzeTranscript()">分析逐字稿 →</button></div>
+        <textarea id="transcriptInput" style="min-height:200px;" placeholder="可以貼入：&#10;① 對焦會議逐字稿&#10;② 自己想的企劃方向&#10;&#10;如有指定方向請加上：&#10;【指定企劃方向，必須包含】&#10;1. 方向一&#10;2. 方向二"></textarea></div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="extractPoints()">提取企劃點 →</button></div>
       </div>
     </div>
 
+    <!-- Step 2: 企劃點確認 -->
     <div id="p-step2" style="display:none;">
-      <p class="page-title">確認萃取資訊</p>
-      <p class="page-sub">確認內容是否正確，如偵測到特定類型可勾選必帶元素</p>
-      <div class="card" id="extractedCard"></div>
-      <div id="elementsCard" class="card">
-        <div class="card-title">選擇內容類型 — 勾選必帶元素</div>
-        <div style="margin-bottom:12px;">
-          <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">點選類型來展開必帶元素（可多選）</div>
-          <div id="typeButtons"></div>
-        </div>
-        <div id="elementsList"></div>
+      <p class="page-title">確認企劃點</p>
+      <p class="page-sub">勾選這次要做的企劃方向，不需要的取消勾選</p>
+      <div class="card" id="pointsCard"></div>
+      <div class="card">
+        <div class="card-title">選擇內容類型 — 勾選必帶元素（可選）</div>
+        <div style="margin-bottom:12px;"><div id="typeButtons"></div></div>
+        <div id="elementsList"><div style="font-size:12px;color:var(--text3);">點選上方類型來展開必帶元素</div></div>
       </div>
       <div class="btn-row">
         <button class="btn btn-outline" onclick="showStep(1)">← 重新輸入</button>
@@ -130,10 +141,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       </div>
     </div>
 
+    <!-- Step 3: 主題選擇 -->
     <div id="p-step3" style="display:none;">
       <p class="page-title">選擇主題</p>
-      <p class="page-sub">勾選喜歡的主題，不喜歡的可以單獨重新生成或換模式</p>
-      <div class="info-box">💡 勾選後點「展開腳本」；「重新生成」換整個主題；「換模式重生」保留標題只換模式</div>
+      <p class="page-sub">勾選喜歡的主題；「重新生成」換整個主題；「換模式重生」保留標題只換模式</p>
+      <div class="info-box">💡 可以分批展開，回主題選擇後重新勾選其他主題即可</div>
       <div id="topicsList"></div>
       <div class="btn-row" style="margin-top:16px;">
         <button class="btn btn-outline" onclick="generateTopics()">全部重新生成</button>
@@ -141,9 +153,10 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       </div>
     </div>
 
+    <!-- Step 4: 腳本 -->
     <div id="p-step4" style="display:none;">
       <p class="page-title">完整腳本</p>
-      <p class="page-sub">可直接點腳本內容編輯修改，滿意後複製或加入學習庫</p>
+      <p class="page-sub">可直接點左側內容編輯修改，滿意後複製或加入學習庫</p>
       <div id="scriptsOutput"></div>
       <div class="btn-row">
         <button class="btn btn-outline" onclick="showStep(3)">← 回主題選擇</button>
@@ -174,32 +187,32 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       <div class="card">
         <div class="card-title">基本資料</div>
         <div class="field-row">
-          <div class="field" style="margin:0;"><label>IP 名稱 *</label><input type="text" id="ip-name" placeholder="例：妮妮"></div>
+          <div class="field" style="margin:0;"><label>IP 名稱 *</label><input type="text" id="ip-name"></div>
           <div class="field" style="margin:0;"><label>平台</label><select id="ip-platform"><option>抖音</option><option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option></select></div>
         </div>
       </div>
       <div class="card">
         <div class="card-title">受眾與風格</div>
         <div class="field-row">
-          <div class="field" style="margin:0;"><label>目標受眾</label><input type="text" id="ip-audience" placeholder="例：18-35歲有理財需求的女性"></div>
-          <div class="field" style="margin:0;"><label>內容類型</label><input type="text" id="ip-category" placeholder="例：富婆日常、財商教學"></div>
+          <div class="field" style="margin:0;"><label>目標受眾</label><input type="text" id="ip-audience"></div>
+          <div class="field" style="margin:0;"><label>內容類型</label><input type="text" id="ip-category"></div>
         </div>
-        <div class="field"><label>風格標籤（逗號分隔）</label><input type="text" id="ip-tags" placeholder="例：反差,富婆人設,財商,搞笑,互嗆"></div>
+        <div class="field"><label>風格標籤（逗號分隔）</label><input type="text" id="ip-tags"></div>
       </div>
       <div class="card">
         <div class="card-title">藏鏡人資料</div>
-        <div class="field"><label>藏鏡人（名稱 / 與IP關係 / 個性特色）</label><input type="text" id="ip-zangking" placeholder="例：藏 / 毒舌損友 / 嘴賤無賴愛佔便宜"></div>
+        <div class="field"><label>藏鏡人（名稱 / 關係 / 個性）</label><input type="text" id="ip-zangking" placeholder="例：藏 / 毒舌損友 / 嘴賤無賴愛佔便宜"></div>
       </div>
       <div class="card">
-        <div class="card-title">IP 真實背景（重要）</div>
-        <div class="field"><label>IP 的真實資產與背景</label><textarea id="ip-background" style="min-height:80px;" placeholder="例：有兩間螺絲粉店、開保時捷、22歲買兩棟房、做理財顧問"></textarea></div>
-        <div class="field"><label>人設禁忌</label><input type="text" id="ip-forbidden" placeholder="例：不能有帳單焦慮、不能編造具體數字"></div>
+        <div class="card-title">IP 真實背景</div>
+        <div class="field"><label>真實資產與背景（具體事實）</label><textarea id="ip-background" style="min-height:80px;"></textarea></div>
+        <div class="field"><label>人設禁忌</label><input type="text" id="ip-forbidden"></div>
       </div>
       <div class="card">
         <div class="card-title">學習素材</div>
-        <div class="field"><label>過去企劃（風格指南＋代表腳本，永久保留）</label><textarea id="ip-past" style="min-height:160px;" placeholder="【腳本風格指南】&#10;（貼入風格描述）&#10;&#10;【藏鏡人對話模式範例】&#10;（貼入代表腳本）"></textarea></div>
-        <div class="field"><label>學習庫（系統自動累積你認可的腳本）</label><textarea id="ip-learned" style="min-height:100px;opacity:0.7;" placeholder="點腳本旁的「加入學習庫」按鈕後會自動更新這裡"></textarea></div>
-        <div class="field" style="margin:0;"><label>視覺風格備註</label><textarea id="ip-visual" style="min-height:60px;" placeholder="例：字幕大字白底、戶外場景為主"></textarea></div>
+        <div class="field"><label>過去企劃（風格指南＋代表腳本，永久保留）</label><textarea id="ip-past" style="min-height:160px;"></textarea></div>
+        <div class="field"><label>學習庫（系統自動累積你認可的腳本）</label><textarea id="ip-learned" style="min-height:100px;opacity:0.7;" placeholder="點腳本旁的「加入學習庫」後會自動更新這裡"></textarea></div>
+        <div class="field" style="margin:0;"><label>視覺風格備註</label><textarea id="ip-visual" style="min-height:60px;"></textarea></div>
       </div>
     </div>
   </div>
@@ -226,15 +239,14 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
       <div class="card">
         <div class="card-title">基本資料</div>
         <div class="field-row">
-          <div class="field" style="margin:0;"><label>博主名稱 *</label><input type="text" id="b-name" placeholder="例：周周啊"></div>
-          <div class="field" style="margin:0;"><label>抖音帳號</label><input type="text" id="b-account" placeholder="例：@zhouzhou"></div>
+          <div class="field" style="margin:0;"><label>博主名稱 *</label><input type="text" id="b-name"></div>
+          <div class="field" style="margin:0;"><label>抖音帳號</label><input type="text" id="b-account"></div>
         </div>
-        <div class="field"><label>風格描述</label><input type="text" id="b-style" placeholder="例：情侶日常出鏡、搞笑互嗆"></div>
+        <div class="field"><label>風格描述</label><input type="text" id="b-style"></div>
       </div>
       <div class="card">
         <div class="card-title">風格 DNA</div>
-        <div class="info-box">在 Claude 對話中上傳博主的 5 支影片截圖，學習完成後將風格 DNA 貼在這裡。</div>
-        <div class="field" style="margin:0;"><label>風格 DNA</label><textarea id="b-dna" style="min-height:140px;" placeholder="貼入 Claude 分析博主影片後輸出的風格 DNA..."></textarea></div>
+        <div class="field" style="margin:0;"><label>風格 DNA</label><textarea id="b-dna" style="min-height:140px;"></textarea></div>
       </div>
     </div>
   </div>
@@ -242,54 +254,53 @@ textarea{resize:vertical;min-height:80px;line-height:1.6}select option{backgroun
 </div>
 
 <script>
-// ========== 素材庫 ==========
-const ELEMENT_DB = {
-  '直播主': {
-    label: '直播/主播相關',
-    elements: [
-      '主播薪水高，強調努力才有、公司敢給',
-      '新人主播第一個月能賺多少',
-      '有主播收入超誇張案例',
-      '主播不一定要露臉（陪聊/聲播/字聊）',
-      '不一定要年輕漂亮，人妻媽媽粉絲黏著度高',
-      '門檻比想像中低，靠濾鏡美顏也可以',
-      '團播C位不是看臉是看誰被指名',
-      '公司提供完整開播空間與資源',
-      '社交能力比外貌重要，可以後天練習',
-    ]
-  },
-  '理財': {
-    label: '理財/財商相關',
-    elements: [
-      '信用卡是資金工具不是消費工具（延後付款）',
-      '養信用額度的方法',
-      '準時繳費是基本功',
-      '房子增貸套利操作觀念',
-      '錢放著會貶值，要讓錢滾錢',
-      '有錢人不是比較會賺，是更懂得用錢',
-      '導向理財課程',
-      '台股市場過熱，資產配置重要性',
-    ]
-  },
-  '富婆日常': {
-    label: '富婆人設相關',
-    elements: [
-      '炫富反差（看似平凡的事被富婆做出不同感）',
-      '精品/奢侈品消費觀輸出（不是炫耀是投資自己）',
-      '身邊夥伴都是高收入圈層',
-      '年輕就財務自由的成長故事',
-      '醫美/投資外表的觀念',
-      '記帳自律習慣帶出財商',
-      '帶出IP過去窮困到現在的反差',
-      '消費有邏輯（哪些該花哪些不該花）',
-    ]
-  }
+const ELEMENT_DB={
+  '直播主':{label:'直播/主播相關',elements:['主播薪水高，強調努力才有、公司敢給','新人主播第一個月能賺多少','有主播收入超誇張案例','不用露臉也可以做（陪聊/聲播/字聊）','不一定要年輕漂亮，人妻媽媽粉絲黏著度高','門檻比想像低，靠濾鏡美顏也可以','團播C位不是看臉是看誰被指名','公司提供完整開播空間與資源','社交能力比外貌重要可以後天練習']},
+  '理財':{label:'理財/財商相關',elements:['信用卡是資金工具不是消費工具（延後付款）','養信用額度的方法','準時繳費是基本功','房子增貸套利操作觀念','錢放著會貶值，要讓錢滾錢','有錢人不是比較會賺，是更懂得用錢','導向理財課程','台股市場過熱，資產配置重要性']},
+  '富婆日常':{label:'富婆人設相關',elements:['炫富反差（看似平凡的事被富婆做出不同感）','精品消費觀（不是炫耀是投資自己）','身邊夥伴都是高收入圈層','年輕就財務自由的成長故事','醫美/投資外表的觀念','記帳自律習慣帶出財商','帶出IP過去窮困到現在的反差','消費有邏輯（哪些該花哪些不該花）']}
 };
+
+const SCRIPT_TRAINING=`【爆款腳本通用訓練教材】
+
+鉤子類型（前3秒必用）：
+1.誤會型：藏以為在做某件事→結果完全不是（例：以為偷賣精品→被抓包只是拿東西）
+2.視覺反差型：IP身份跟當下行為極度不符（例：開保時捷的人在換機車電池）
+3.金額衝擊型：特寫付款/數字畫面直接嚇人（例：付款成功13萬特寫）
+4.POV搭訕型：藏假裝路人接近IP（例：POV搭訕保時捷女車主）
+5.挑釁開場型：藏直接嗆IP或做白爛的事（例：藏拿衣夾要夾IP鼻子）
+
+藏的說話方式：
+句子短嘴賤直白，常用：乾/靠北/幹/真的假的/果然是有錢人
+提無理要求→被IP打槍→羨慕認輸收尾
+例：「那我也可以住進來嗎」→「......你這樣講很傷人欸」→「我看我是踢到金礦了」
+
+IP的說話方式：
+句子更短有力淡定，偶爾翻白眼冷笑
+反將藏一軍：「你上次撞到我車還沒賠」
+觀念藏在對話裡不說教
+霸氣收：「先把XXX做到再來跟我談」
+
+腳本節奏：
+衝擊開場→藏白爛→IP淡定→藏繼續嘴砲→IP反將→藏被打臉→結尾金句
+
+格式規則：
+第一幕：（畫面說明）
+藏：短句台詞
+IP：短句台詞
+（帶出XXX方向）
+（畫面：XXX）
+
+結尾：
+藏：台詞
+IP：台詞
+
+目的：一句話
+人物：•IP（角色）•藏（關係）
+事件：3-5行說明`;
 
 let ipDB=JSON.parse(localStorage.getItem('svp_ip')||'[]');
 let bloggerDB=JSON.parse(localStorage.getItem('svp_blogger')||'[]');
-let selectedIP=null,selectedBlogger=null,editingIPIdx=-1,editingBloggerIdx=-1,topics=[],extracted={};
-let selectedElements=[];
+let selectedIP=null,selectedBlogger=null,editingIPIdx=-1,editingBloggerIdx=-1,topics=[],extracted={},planPoints=[],selectedElements=[],activeTypes=new Set();
 
 function getApiKey(){return localStorage.getItem('svp_apikey')||''}
 function saveApiKey(){const k=document.getElementById('apiKeyInput').value.trim();if(!k.startsWith('sk-')){alert('請輸入正確的 API 金鑰');return}localStorage.setItem('svp_apikey',k);document.getElementById('apiSetup').style.display='none';init()}
@@ -298,22 +309,40 @@ function checkApiKey(){if(getApiKey()){document.getElementById('apiSetup').style
 function init(){renderPlannerSidebar();renderIPSidebar();renderBloggerSidebar()}
 function save(){localStorage.setItem('svp_ip',JSON.stringify(ipDB));localStorage.setItem('svp_blogger',JSON.stringify(bloggerDB))}
 function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function copyScript(btn,i){const el=document.getElementById('script-body-'+i);navigator.clipboard.writeText(el.value||el.textContent);btn.textContent='已複製！';setTimeout(()=>btn.textContent='複製',1500)}
-function copyAll(){const all=[...document.querySelectorAll('.script-body')].map(e=>e.value||e.textContent).join('\n\n---\n\n');navigator.clipboard.writeText(all);alert('已複製全部腳本！')}
+
+function renderScriptText(text){
+  return text.split('\n').map(line=>{
+    const trimmed=line.trim();
+    if(trimmed.startsWith('藏：')||trimmed.startsWith('藏:'))
+      return `<div class="line-zang">${escHtml(line)}</div>`;
+    if(trimmed.startsWith('IP：')||trimmed.startsWith('IP:')||trimmed.startsWith('妮妮：')||trimmed.startsWith('妮妮:'))
+      return `<div class="line-ip">${escHtml(line)}</div>`;
+    if(trimmed.startsWith('（')||trimmed.startsWith('('))
+      return `<div class="line-action">${escHtml(line)}</div>`;
+    return `<div>${escHtml(line)}</div>`;
+  }).join('');
+}
+
+function copyScript(btn,i){
+  const el=document.getElementById('script-edit-'+i);
+  navigator.clipboard.writeText(el.value);
+  btn.textContent='已複製！';setTimeout(()=>btn.textContent='複製',1500);
+}
+function copyAll(){
+  const all=[...document.querySelectorAll('[id^=script-edit-]')].map(e=>e.value).join('\n\n---\n\n');
+  navigator.clipboard.writeText(all);alert('已複製全部腳本！');
+}
 
 function saveToLearning(i){
   if(selectedIP===null)return;
-  const el=document.getElementById('script-body-'+i);
-  const scriptText=(el.value||el.textContent).trim();
+  const el=document.getElementById('script-edit-'+i);
+  const scriptText=el.value.trim();
   const title=document.querySelectorAll('.script-title')[i]?.textContent||'';
   const ip=ipDB[selectedIP];
-  const newEntry=`\n\n【學習範例 - ${title}】\n${scriptText.substring(0,600)}`;
-  ip.learned=(ip.learned||'')+newEntry;
-  ipDB[selectedIP]=ip;
-  save();
+  ip.learned=(ip.learned||'')+`\n\n【學習範例 - ${title}】\n${scriptText.substring(0,600)}`;
+  ipDB[selectedIP]=ip;save();
   const btn=document.querySelectorAll('.script-card')[i]?.querySelector('.btn-learn');
   if(btn){btn.textContent='已加入 ✓';setTimeout(()=>btn.textContent='加入學習庫',2000)}
-  if(document.getElementById('ip-learned'))document.getElementById('ip-learned').value=ip.learned||'';
 }
 
 async function callAPI(body){
@@ -338,45 +367,26 @@ function renderPlannerSidebar(){
 function selectIP(i){selectedIP=i;renderPlannerSidebar()}
 function selectBlogger(i){selectedBlogger=i;renderPlannerSidebar()}
 
-let activeTypes=new Set();
-
 function renderTypeButtons(){
-  const btnDiv=document.getElementById('typeButtons');
-  const listDiv=document.getElementById('elementsList');
-  selectedElements=[];
-  activeTypes=new Set();
-  btnDiv.innerHTML=Object.keys(ELEMENT_DB).map(t=>`
-    <span class="type-badge" onclick="toggleTypeBtn('${t}',this)" style="font-size:13px;padding:6px 14px;margin:4px;">${ELEMENT_DB[t].label}</span>
-  `).join('');
-  listDiv.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;">點選上方類型來展開必帶元素</div>';
+  document.getElementById('typeButtons').innerHTML=Object.keys(ELEMENT_DB).map(t=>`<span class="type-badge" onclick="toggleTypeBtn('${t}',this)">${ELEMENT_DB[t].label}</span>`).join('');
 }
 
 function toggleTypeBtn(type,btn){
   btn.classList.toggle('active');
-  if(btn.classList.contains('active')){
-    activeTypes.add(type);
-  } else {
-    activeTypes.delete(type);
-    ELEMENT_DB[type].elements.forEach((el,i)=>{
-      selectedElements=selectedElements.filter(e=>e!==el);
-    });
-  }
+  if(btn.classList.contains('active'))activeTypes.add(type);
+  else{activeTypes.delete(type);ELEMENT_DB[type].elements.forEach(el=>{selectedElements=selectedElements.filter(e=>e!==el)})}
   renderElementsList();
 }
 
 function renderElementsList(){
   const listDiv=document.getElementById('elementsList');
-  if(activeTypes.size===0){
-    listDiv.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0;">點選上方類型來展開必帶元素</div>';
-    return;
-  }
+  if(activeTypes.size===0){listDiv.innerHTML='<div style="font-size:12px;color:var(--text3);">點選上方類型來展開必帶元素</div>';return}
   let html='';
   activeTypes.forEach(t=>{
     html+=`<div style="font-size:11px;color:var(--accent);margin:12px 0 6px;font-family:Space Mono,monospace;">${ELEMENT_DB[t].label}</div>`;
     ELEMENT_DB[t].elements.forEach((el,i)=>{
       const id=`el-${t}-${i}`;
-      const checked=selectedElements.includes(el);
-      html+=`<div class="element-check"><input type="checkbox" id="${id}" value="${el}" onchange="toggleElement(this)" ${checked?'checked':''}><label for="${id}" style="cursor:pointer;font-size:13px;">${el}</label></div>`;
+      html+=`<div class="element-check"><input type="checkbox" id="${id}" value="${el}" onchange="toggleElement(this)"><label for="${id}" style="cursor:pointer;">${el}</label></div>`;
     });
   });
   listDiv.innerHTML=html;
@@ -387,32 +397,46 @@ function toggleElement(cb){
   else if(!cb.checked)selectedElements=selectedElements.filter(e=>e!==cb.value);
 }
 
-async function analyzeTranscript(){
+async function extractPoints(){
   const t=document.getElementById('transcriptInput').value.trim();
   if(!t){alert('請貼入逐字稿或企劃方向');return}
   if(selectedIP===null){alert('請先在左側選擇 IP');return}
   const ip=ipDB[selectedIP];
-  const card=document.getElementById('extractedCard');
-  card.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">分析中</div>';showStep(2);
+  const card=document.getElementById('pointsCard');
+  card.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">分析中，提取企劃點...</div>';
+  showStep(2);renderTypeButtons();selectedElements=[];activeTypes=new Set();
+
   try{
-    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:1000,
-      system:'你是短影音企劃助手。分析內容萃取資訊，只回傳JSON不要有其他文字。格式：{"product":"產品服務","usp":"核心賣點","audience":"目標受眾","tone":"語氣調性","restrictions":"禁忌（無則空字串）","insights":["洞察1","洞察2","洞察3"],"specified_topics":"指定的企劃方向（無則空字串）"}',
-      messages:[{role:'user',content:`IP：${ip.name}，受眾：${ip.audience}，風格：${ip.tags}\n\n內容：\n${t}`}]});
+    const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:1500,
+      system:`你是短影音企劃助手。從內容中提取企劃點和資訊，只回傳JSON不要有其他文字。
+格式：{"product":"產品服務","usp":"核心賣點","audience":"目標受眾","tone":"語氣調性","restrictions":"禁忌（無則空字串）","plan_points":["企劃點1","企劃點2","企劃點3"],"specified_topics":"指定的企劃方向（無則空字串）"}
+plan_points：從逐字稿中提取所有可以拍攝的具體企劃方向，每個點簡短清楚（15字以內），如有指定方向必須包含`,
+      messages:[{role:'user',content:`IP：${ip.name}，受眾：${ip.audience}\n\n內容：\n${t}`}]});
     if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
     const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     extracted=JSON.parse(txt);
-    card.innerHTML=`<div class="card-title">AI 萃取結果</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">產品/服務</div><div style="font-size:14px;">${extracted.product}</div></div>
-        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">核心賣點</div><div style="font-size:14px;">${extracted.usp}</div></div>
-        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">目標受眾</div><div style="font-size:14px;">${extracted.audience}</div></div>
-        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">語氣調性</div><div style="font-size:14px;">${extracted.tone}</div></div>
+    planPoints=extracted.plan_points||[];
+
+    card.innerHTML=`
+      <div class="card-title">從逐字稿提取的企劃點 — 勾選要做的方向</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;font-size:13px;">
+        <div><span style="color:var(--text3);font-size:11px;">產品</span><br>${extracted.product}</div>
+        <div><span style="color:var(--text3);font-size:11px;">語氣</span><br>${extracted.tone}</div>
       </div>
-      ${extracted.restrictions?`<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">注意事項</div><div style="font-size:13px;color:#ff8a8a;">${extracted.restrictions}</div></div>`:''}
-      ${extracted.specified_topics?`<div style="margin-bottom:12px;"><div style="font-size:11px;color:var(--accent);margin-bottom:4px;">✦ 指定企劃方向</div><div style="font-size:13px;color:var(--accent);">${extracted.specified_topics}</div></div>`:''}
-      <div><div style="font-size:11px;color:var(--text3);margin-bottom:6px;">關鍵洞察</div>${(extracted.insights||[]).map(k=>`<div style="font-size:13px;color:var(--text2);margin-bottom:4px;">• ${k}</div>`).join('')}</div>`;
-    renderTypeButtons();
+      ${extracted.restrictions?`<div style="font-size:12px;color:#ff8a8a;margin-bottom:12px;">⚠️ ${extracted.restrictions}</div>`:''}
+      ${extracted.specified_topics?`<div style="font-size:12px;color:var(--accent);margin-bottom:12px;">✦ 指定方向：${extracted.specified_topics}</div>`:''}
+      <div id="pointsList">${planPoints.map((p,i)=>`
+        <div class="point-item selected" id="point-${i}" onclick="togglePoint(${i},this)">
+          <input type="checkbox" checked onclick="event.stopPropagation();togglePoint(${i},this.closest('.point-item'))">
+          <div class="point-text">${p}</div>
+        </div>`).join('')}</div>`;
   }catch(e){card.innerHTML=`<div style="color:var(--red);font-size:13px;">分析失敗：${e.message}</div>`}
+}
+
+function togglePoint(i,el){
+  el.classList.toggle('selected');
+  const cb=el.querySelector('input');
+  if(cb)cb.checked=el.classList.contains('selected');
 }
 
 async function generateTopics(){
@@ -420,55 +444,53 @@ async function generateTopics(){
   const blogger=selectedBlogger!==null?bloggerDB[selectedBlogger]:null;
   const listEl=document.getElementById('topicsList');
   listEl.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;padding:1rem 0;">生成主題中（第1批）</div>';showStep(3);
-  const bCtx=blogger?`\n參考博主：${blogger.name}，風格：${blogger.style}${blogger.dna?`\n風格DNA：${blogger.dna.substring(0,200)}`:''}`:''
-  const bgCtx=ip.background?`\nIP真實背景：${ip.background}`:'';
-  const pastCtx=ip.past?`\n過去企劃風格參考：\n${ip.past.substring(0,1500)}`:'';
-  const learnedCtx=ip.learned?`\n你認可的腳本範例：\n${ip.learned.substring(0,500)}`:'';
-  const specCtx=extracted.specified_topics?`\n【指定必須包含】：${extracted.specified_topics}`:'';
-  const forbCtx=ip.forbidden?`\n人設禁忌：${ip.forbidden}`:'';
+
+  const selectedPoints=[...document.querySelectorAll('#pointsList .point-item.selected .point-text')].map(el=>el.textContent);
+  const pointsCtx=selectedPoints.length>0?`\n【從逐字稿選定的企劃方向，必須優先納入主題】：\n${selectedPoints.map((p,i)=>`${i+1}.${p}`).join('\n')}`:'';
   const elemCtx=selectedElements.length>0?`\n【必帶元素，請分配到主題中】：\n${selectedElements.map((e,i)=>`${i+1}.${e}`).join('\n')}`:'';
+  const bgCtx=ip.background?`\nIP真實背景：${ip.background}`:'';
+  const pastCtx=ip.past?`\n過去企劃風格：\n${ip.past.substring(0,1200)}`:'';
+  const learnedCtx=ip.learned?`\n認可腳本範例：\n${ip.learned.substring(0,400)}`:'';
+  const forbCtx=ip.forbidden?`\n人設禁忌：${ip.forbidden}`:'';
+  const bCtx=blogger?`\n參考博主：${blogger.name}，風格：${blogger.style}${blogger.dna?`\n風格DNA：${blogger.dna.substring(0,150)}`:''}`:'';
 
-  const sys=`你是擁有無數爆款短影音企劃經驗的專家。產出藏鏡人模式雙人出鏡腳本主題。只回傳JSON陣列不要有其他文字。
-格式：[{"title":"主題標題","mode":"企劃模式","hook":"開頭鉤子（只描述衝擊情境不超過20字不寫台詞）","conflict":"衝突笑點和金句設計","ending":"結尾反轉或金句方向"}]
+  const sys=`你是擁有無數爆款短影音企劃經驗的專家。產出藏鏡人模式主題，只回傳JSON陣列不要有其他文字。
+格式：[{"title":"主題標題","mode":"企劃模式","hook":"衝擊開場情境（不超過20字不寫台詞）","conflict":"衝突笑點和金句設計","ending":"結尾反轉或金句方向"}]
 
-四大企劃模式：
+四大模式：
 1.藏鏡人對話：衝擊鉤子→藏白爛吐槽→IP霸氣反將→藏被打臉認輸
-2.旁白：大家以為...但實際上...反差開場→揭露真實→金句昇華
-3.遊戲挑戰：規則說明→過程懸念→意外反轉→邀觀眾參與
-4.回到過去場景：重返舊地點→今昔反差→昇華價值觀
+2.旁白：「大家以為...但實際上...」反差→揭露真實→金句昇華
+3.遊戲挑戰：規則→懸念→反轉→邀觀眾參與
+4.回到過去場景：重返舊地→今昔反差→昇華
 
 爆款原則：
-- hook必須讓人前3秒停下來，用視覺反差、金額衝擊、誤會情境、白爛開場
-- conflict要設計讓人想留言的點（共鳴/憤怒/娛樂）
-- ending要有讓人想截圖分享的金句或反轉
-- 場景只是道具，核心是IP人設和觀念自然帶出，不是說教
+hook必須讓人前3秒停下來（視覺反差/誤會/金額衝擊/挑釁）
+conflict設計讓人想留言（共鳴/憤怒/娛樂）
+ending要有讓人截圖分享的金句或反轉
+場景只是道具，核心是IP人設和觀念自然帶出不說教
 
-嚴格規則：
-1.主題必須100%符合IP人設
-2.hook只描述衝擊情境不超過20字不寫台詞
+規則：
+1.主題100%符合IP人設不矛盾
+2.hook只描述情境不超過20字不寫台詞
 3.藏是毒舌白爛損友不是乖助理
-4.不能編造具體數字
-5.10個主題涵蓋至少2種不同模式
-6.如有指定方向必須優先納入
-7.所有主題必須可以提前安排執行，不能設計臨時發生或無法控制的情境
-8.如有必帶元素請分配到不同主題中帶出`;
+4.不編造具體數字
+5.10個主題涵蓋至少2種模式
+6.選定的企劃方向必須優先納入
+7.所有主題可以提前安排執行，不能設計臨時發生或無法控制的情境`;
 
-  const basePrompt=`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}${bgCtx}${forbCtx}${specCtx}${elemCtx}
-產品：${extracted.product}，賣點：${extracted.usp}，語氣：${extracted.tone}${bCtx}${pastCtx}${learnedCtx}`;
+  const basePrompt=`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}${bgCtx}${forbCtx}${pointsCtx}${elemCtx}
+產品：${extracted.product||''}，賣點：${extracted.usp||''}，語氣：${extracted.tone||''}${bCtx}${pastCtx}${learnedCtx}`;
 
   try{
-    const d1=await callAPI({model:'claude-sonnet-4-5',max_tokens:3000,system:sys,
-      messages:[{role:'user',content:basePrompt+(extracted.specified_topics?`\n\n【重要】指定方向必須優先出現：${extracted.specified_topics}`:'')+'\n請產出第1-5個主題'}]});
+    const d1=await callAPI({model:'claude-sonnet-4-5',max_tokens:3000,system:sys,messages:[{role:'user',content:basePrompt+'\n請產出第1-5個主題，選定的企劃方向必須優先納入'}]});
     if(d1.error)throw new Error(d1.error.message);
     const t1=(d1.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     const batch1=JSON.parse(t1);
     listEl.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;padding:1rem 0;">生成主題中（第2批）</div>';
-    const d2=await callAPI({model:'claude-sonnet-4-5',max_tokens:3000,system:sys,
-      messages:[{role:'user',content:basePrompt+`\n已有主題：${batch1.map(t=>t.title).join('、')}\n請產出5個不同的新主題（第6-10個）`}]});
+    const d2=await callAPI({model:'claude-sonnet-4-5',max_tokens:3000,system:sys,messages:[{role:'user',content:basePrompt+`\n已有：${batch1.map(t=>t.title).join('、')}\n請產出5個不同的新主題（第6-10個）`}]});
     if(d2.error)throw new Error(d2.error.message);
     const t2=(d2.content||[]).map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    const batch2=JSON.parse(t2);
-    topics=[...batch1,...batch2];renderTopics();
+    topics=[...batch1,...JSON.parse(t2)];renderTopics();
   }catch(e){listEl.innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
 }
 
@@ -501,78 +523,51 @@ async function regenSingle(idx){
   item.innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">重新生成中</div>';
   try{
     const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:400,
-      system:'你是抖音短影音企劃，產出1個新主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"企劃模式","hook":"開頭鉤子","conflict":"衝突笑點","ending":"結尾方向"}',
-      messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product}${ip.forbidden?'\n禁忌：'+ip.forbidden:''}\n請產出一個與這些主題不同的新主題：${topics.map(t=>t.title).join('、')}`}]});
+      system:'你是抖音短影音企劃，產出1個爆款主題，只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"企劃模式","hook":"衝擊開場情境","conflict":"衝突笑點","ending":"結尾金句方向"}',
+      messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，產品：${extracted.product||''}${ip.forbidden?'\n禁忌：'+ip.forbidden:''}\n請產出一個與這些主題不同的新爆款主題：${topics.map(t=>t.title).join('、')}`}]});
     if(d.error)throw new Error(d.error.message);
-    const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    topics[idx]=JSON.parse(txt);renderTopics();
+    topics[idx]=JSON.parse(d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+    renderTopics();
   }catch(e){renderTopics()}
 }
 
 async function regenWithMode(idx,mode){
-  const ip=ipDB[selectedIP];
-  const t=topics[idx];
+  const ip=ipDB[selectedIP];const t=topics[idx];
   const item=document.querySelector(`#topic-item-${idx} .topic-body`);
-  item.innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">切換模式重新生成中</div>';
+  item.innerHTML='<div class="loading" style="font-size:13px;color:var(--text2);">切換模式中</div>';
   try{
     const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:400,
-      system:`你是抖音短影音企劃，保留主題標題只改變企劃模式，只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"${mode}","hook":"新模式的開頭鉤子","conflict":"新模式的衝突笑點","ending":"新模式的結尾方向"}`,
-      messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}\n原本主題：${t.title}\n請保留【${t.title}】這個標題，改用【${mode}模式】重新設計hook、conflict、ending`}]});
+      system:`你是抖音短影音企劃，保留主題標題只改模式，只回傳JSON不要有其他文字。格式：{"title":"主題標題","mode":"${mode}","hook":"新模式開場情境","conflict":"新模式衝突笑點","ending":"新模式結尾方向"}`,
+      messages:[{role:'user',content:`保留標題【${t.title}】，改用【${mode}模式】重新設計hook、conflict、ending`}]});
     if(d.error)throw new Error(d.error.message);
-    const txt=d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    const updated=JSON.parse(txt);
-    updated.title=t.title;
-    topics[idx]=updated;renderTopics();
+    const updated=JSON.parse(d.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim());
+    updated.title=t.title;topics[idx]=updated;renderTopics();
   }catch(e){renderTopics()}
 }
 
 async function expandScripts(){
   const checked=[...document.querySelectorAll('#topicsList input[type=checkbox]:checked')].map(c=>parseInt(c.value));
   if(checked.length===0){alert('請至少勾選一個主題');return}
-  if(checked.length>3){alert('建議一次最多選3個主題');return}
+  if(checked.length>3){alert('建議一次最多選3個主題，可以分批展開');return}
   const ip=ipDB[selectedIP];
   const output=document.getElementById('scriptsOutput');
   output.innerHTML='<div class="loading" style="color:var(--text2);font-size:13px;">生成腳本中</div>';showStep(4);
   const selected=checked.map(i=>topics[i]);
-  const pastEx=ip.past?`\n\n【過去企劃範例，嚴格學習格式與風格】\n${ip.past.substring(0,1500)}`:'';
-  const learnedEx=ip.learned?`\n【你認可的腳本，學習這個風格】\n${ip.learned.substring(0,500)}`:'';
-  const bgCtx=ip.background?`\nIP真實背景（必須反映在腳本中）：${ip.background}`:'';
+  const bgCtx=ip.background?`\nIP真實背景（必須反映）：${ip.background}`:'';
+  const pastEx=ip.past?`\n${ip.past.substring(0,1200)}`:'';
+  const learnedEx=ip.learned?`\n${ip.learned.substring(0,400)}`:'';
 
-  const sys=`你是擁有無數爆款短影音企劃經驗的專家。你深度理解社群演算法和觀眾心理。嚴格按照以下規則產出腳本：
+  const sys=`你是擁有無數爆款短影音企劃經驗的專家。嚴格按照以下規則產出腳本：
 
-【爆款核心原則】
-前3秒決定生死：鉤子必須讓人「停下來」不是「看下去」，用衝突感+好奇心+情緒觸發
-讓人想留言：設計「我也是這樣」共鳴點、「這也太過分了」憤怒點、「哈哈真的假的」娛樂點
-台詞節奏：短狠準，每句不超過10字，來回快速對打，藏要夠白爛才能襯托IP
-金句設計：每3-4句要有一個讓人想截圖的台詞或反轉
-場景是道具：拍攝場景只是製造反差的背景，核心永遠是IP人設展現和觀念自然帶出
-財商隱形：觀念藏在嘴砲裡，讓觀眾覺得在看兩個人吵架不是在上課
+${SCRIPT_TRAINING}
 
-【格式規則】
-1.純文字輸出，絕對不能用markdown
-2.只有「第一幕」和「結尾」，不能有第二幕第三幕
-3.不能編造具體數字，用模糊表達
-4.台詞可以有髒話（乾、靠北、幹、媽的）增加真實感和網感
-5.格式：
-
-第一幕：（場景說明）
-IP：台詞
-藏：台詞
-（畫面動作說明）
-
-結尾：
-藏：台詞
-IP：台詞
-
-大綱：
-1. 分鏡點（說明畫面）
-2. 分鏡點
-3. 分鏡點
-
-【人物規則】
-藏：毒舌白爛損友，說話嘴賤無賴，愛占便宜，被IP打臉要打得很徹底，觀眾才爽
-IP：自信霸氣，說話短句有力，淡定翻白眼，不被藏欺負，金句反將一軍
-台詞：口語自然像真實對話，台灣用語，IP真實背景必須正確反映`;
+額外規則：
+- 台詞極短，每句不超過10字
+- 每3-4句要有一個金句或反轉讓人想截圖
+- 財商觀念藏在嘴砲裡，不說教不長篇大論
+- 括號內容是給IP自由發揮的方向提示，不是完整台詞
+- 藏要夠白爛才能襯托IP，被打臉要打得很徹底
+- 純文字輸出，不能用markdown格式`;
 
   try{
     const results=[];
@@ -582,17 +577,21 @@ IP：自信霸氣，說話短句有力，淡定翻白眼，不被藏欺負，金
       const d=await callAPI({model:'claude-sonnet-4-5',max_tokens:2000,system:sys,
         messages:[{role:'user',content:`IP：${ip.name}，藏鏡人：${ip.zangking}，受眾：${ip.audience}，風格：${ip.tags}${bgCtx}
 禁忌：${ip.forbidden||'無'}
-產品：${extracted.product}，賣點：${extracted.usp}${pastEx}${learnedEx}
+產品：${extracted.product||''}，賣點：${extracted.usp||''}${pastEx}${learnedEx}
 
 主題：${t.title}
 模式：${t.mode||'藏鏡人對話'}
 開頭鉤子：${t.hook}
 衝突設計：${t.conflict}
-結尾方向：${t.ending}`}]});
+結尾方向：${t.ending}
+
+請輸出：左側腳本（第一幕+結尾+大綱）和右側概要（目的+人物+事件），用「===概要===」分隔`}]});
       if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
       const txt=d.content.map(c=>c.text||'').join('');
-      results.push({title:t.title,script:txt.trim()});
+      const parts=txt.split('===概要===');
+      results.push({title:t.title,script:(parts[0]||txt).trim(),summary:(parts[1]||'').trim()});
     }
+
     output.innerHTML=results.map((r,i)=>`
       <div class="script-card">
         <div class="script-header">
@@ -602,56 +601,55 @@ IP：自信霸氣，說話短句有力，淡定翻白眼，不被藏欺負，金
             <button class="btn btn-learn btn-sm" onclick="saveToLearning(${i})">加入學習庫</button>
           </div>
         </div>
-        <textarea class="script-body" id="script-body-${i}" style="min-height:300px;">${escHtml(r.script)}</textarea>
+        <div class="script-layout">
+          <div class="script-left">
+            <div style="margin-bottom:8px;">${renderScriptText(r.script)}</div>
+            <textarea id="script-edit-${i}" style="width:100%;background:transparent;border:1px dashed var(--border2);border-radius:6px;padding:8px;margin-top:8px;font-size:12px;color:var(--text2);font-family:Noto Sans TC,sans-serif;resize:none;min-height:80px;outline:none;" placeholder="在這裡直接修改腳本...">${r.script}</textarea>
+          </div>
+          <div class="script-right">
+            ${r.summary?r.summary.split('\n').map(line=>{
+              if(line.startsWith('目的')||line.startsWith('人物')||line.startsWith('事件'))
+                return `<div class="script-right-title">${line}</div>`;
+              return `<div style="color:var(--text2);">${line}</div>`;
+            }).join(''):'<div style="color:var(--text3);">無概要</div>'}
+          </div>
+        </div>
       </div>`).join('');
   }catch(e){output.innerHTML=`<div style="color:var(--red);font-size:13px;">生成失敗：${e.message}</div>`}
 }
 
-function renderIPSidebar(){
-  document.getElementById('ip-sidebar-list').innerHTML=ipDB.map((ip,i)=>`<div class="sidebar-item ${editingIPIdx===i?'active':''}" onclick="editIP(${i})"><div class="sidebar-item-name">${ip.name}</div><div class="sidebar-item-meta">${ip.platform}</div></div>`).join('');
-}
+function renderIPSidebar(){document.getElementById('ip-sidebar-list').innerHTML=ipDB.map((ip,i)=>`<div class="sidebar-item ${editingIPIdx===i?'active':''}" onclick="editIP(${i})"><div class="sidebar-item-name">${ip.name}</div><div class="sidebar-item-meta">${ip.platform}</div></div>`).join('')}
 function newIP(){editingIPIdx=-1;clearIPForm();document.getElementById('ipFormTitle').textContent='新增 IP';document.getElementById('ipDeleteBtn').style.display='none';document.getElementById('ip-empty').style.display='none';document.getElementById('ip-form-area').style.display='block';renderIPSidebar()}
 function editIP(i){
   editingIPIdx=i;const ip=ipDB[i];
   document.getElementById('ipFormTitle').textContent='編輯 IP：'+ip.name;
   document.getElementById('ipDeleteBtn').style.display='inline-block';
-  document.getElementById('ip-name').value=ip.name||'';
-  document.getElementById('ip-platform').value=ip.platform||'抖音';
-  document.getElementById('ip-audience').value=ip.audience||'';
-  document.getElementById('ip-category').value=ip.category||'';
-  document.getElementById('ip-zangking').value=ip.zangking||'';
-  document.getElementById('ip-tags').value=ip.tags||'';
-  document.getElementById('ip-background').value=ip.background||'';
-  document.getElementById('ip-forbidden').value=ip.forbidden||'';
-  document.getElementById('ip-past').value=ip.past||'';
-  document.getElementById('ip-learned').value=ip.learned||'';
-  document.getElementById('ip-visual').value=ip.visual||'';
+  ['name','platform','audience','category','zangking','tags','background','forbidden','past','learned','visual'].forEach(f=>{
+    const el=document.getElementById('ip-'+f);if(el)el.value=ip[f]||'';
+  });
   document.getElementById('ip-empty').style.display='none';
   document.getElementById('ip-form-area').style.display='block';
   renderIPSidebar();
 }
 function saveIP(){
-  const ip={name:document.getElementById('ip-name').value.trim(),platform:document.getElementById('ip-platform').value,audience:document.getElementById('ip-audience').value.trim(),category:document.getElementById('ip-category').value.trim(),zangking:document.getElementById('ip-zangking').value.trim(),tags:document.getElementById('ip-tags').value.trim(),background:document.getElementById('ip-background').value.trim(),forbidden:document.getElementById('ip-forbidden').value.trim(),past:document.getElementById('ip-past').value.trim(),learned:document.getElementById('ip-learned').value.trim(),visual:document.getElementById('ip-visual').value.trim()};
+  const fields=['name','platform','audience','category','zangking','tags','background','forbidden','past','learned','visual'];
+  const ip={};
+  fields.forEach(f=>{const el=document.getElementById('ip-'+f);if(el)ip[f]=el.value.trim()});
   if(!ip.name){alert('請填入 IP 名稱');return}
   if(editingIPIdx>=0)ipDB[editingIPIdx]=ip;else ipDB.push(ip);
   save();cancelIPForm();renderIPSidebar();renderPlannerSidebar();
 }
 function deleteIP(){if(!confirm(`確定刪除「${ipDB[editingIPIdx].name}」？`))return;ipDB.splice(editingIPIdx,1);save();cancelIPForm();renderIPSidebar();renderPlannerSidebar()}
 function cancelIPForm(){editingIPIdx=-1;document.getElementById('ip-form-area').style.display='none';document.getElementById('ip-empty').style.display=ipDB.length===0?'block':'none';renderIPSidebar()}
-function clearIPForm(){['ip-name','ip-audience','ip-category','ip-zangking','ip-tags','ip-background','ip-forbidden','ip-past','ip-learned','ip-visual'].forEach(id=>document.getElementById(id).value='')}
+function clearIPForm(){['name','audience','category','zangking','tags','background','forbidden','past','learned','visual'].forEach(f=>{const el=document.getElementById('ip-'+f);if(el)el.value=''})}
 
-function renderBloggerSidebar(){
-  document.getElementById('blogger-sidebar-list').innerHTML=bloggerDB.map((b,i)=>`<div class="sidebar-item ${editingBloggerIdx===i?'active':''}" onclick="editBlogger(${i})"><div class="sidebar-item-name">${b.name}</div><div class="sidebar-item-meta">${b.account||''}</div>${b.dna?'<div class="has-data">✦ 已學習DNA</div>':''}</div>`).join('');
-}
+function renderBloggerSidebar(){document.getElementById('blogger-sidebar-list').innerHTML=bloggerDB.map((b,i)=>`<div class="sidebar-item ${editingBloggerIdx===i?'active':''}" onclick="editBlogger(${i})"><div class="sidebar-item-name">${b.name}</div><div class="sidebar-item-meta">${b.account||''}</div>${b.dna?'<div class="has-data">✦ 已學習DNA</div>':''}</div>`).join('')}
 function newBlogger(){editingBloggerIdx=-1;['b-name','b-account','b-style','b-dna'].forEach(id=>document.getElementById(id).value='');document.getElementById('bloggerFormTitle').textContent='新增博主';document.getElementById('bloggerDeleteBtn').style.display='none';document.getElementById('blogger-empty').style.display='none';document.getElementById('blogger-form-area').style.display='block';renderBloggerSidebar()}
 function editBlogger(i){
   editingBloggerIdx=i;const b=bloggerDB[i];
   document.getElementById('bloggerFormTitle').textContent='編輯博主：'+b.name;
   document.getElementById('bloggerDeleteBtn').style.display='inline-block';
-  document.getElementById('b-name').value=b.name||'';
-  document.getElementById('b-account').value=b.account||'';
-  document.getElementById('b-style').value=b.style||'';
-  document.getElementById('b-dna').value=b.dna||'';
+  ['b-name','b-account','b-style','b-dna'].forEach(id=>{document.getElementById(id).value=b[id.replace('b-','')]||''});
   document.getElementById('blogger-empty').style.display='none';
   document.getElementById('blogger-form-area').style.display='block';
   renderBloggerSidebar();
